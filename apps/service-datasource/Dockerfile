@@ -18,4 +18,4 @@ COPY . .
 # Build production files
 RUN nest build service-datasource
 
-CMD ["node", "dist/apps/api-admin/main.js"]
+CMD ["node", "dist/apps/service-datasource/main.js"]

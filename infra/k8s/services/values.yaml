@@ -7,13 +7,13 @@ global:
 api-admin:
   enabled: true
   image:
-    repository: dev/api-admin
+    repository: api-admin
     tag: latest
 
 service-datasource:
   enabled: true
   image:
-    repository: dev/service-datasource
+    repository: service-datasource
     tag: latest
 
 ingress:
