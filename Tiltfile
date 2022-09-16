@@ -1,3 +1,5 @@
+trigger_mode(TRIGGER_MODE_MANUAL)
+
 k8s_yaml(helm('./infra/k8s/deps', name='services'))
 
 docker_build('dev/api-admin', '.', dockerfile='./apps/api-admin/Dockerfile')

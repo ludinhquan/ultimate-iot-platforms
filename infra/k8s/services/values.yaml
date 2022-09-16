@@ -22,3 +22,6 @@ ingress:
     - name: api-admin
       path: /api-admin/?(.*)
       servicePort: 3000
+    - name: service-datasource
+      path: /service-datasource/?(.*)
+      servicePort: 4000
