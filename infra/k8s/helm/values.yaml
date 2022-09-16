@@ -1,0 +1,40 @@
+global: 
+  replicaCount: 1
+  environment: {}
+  environmentRef: 
+    APPLICATION_ID: metadata.name
+
+rabbitmq:
+  enabled: true
+  volumePermissions:
+    enabled: true
+  auth:
+    username: admin
+    password: dev
+  extraConfiguration: |-
+    default_vhost = ilotusland
+  service:
+    type: NodePort
+    nodePorts:
+      amqp: 30677
+      manager: 30678
+
+
+api-admin:
+  enabled: true
+  image:
+    repository: dev/api-admin
+    tag: latest
+
+service-datasource:
+  enabled: true
+  image:
+    repository: dev/service-datasource
+    tag: latest
+
+ingress:
+  enabled: true
+  paths:
+    - name: dev-api
+      path: /auth/?(.*)
+      servicePort: 3000

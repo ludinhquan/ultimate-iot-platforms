@@ -1,0 +1,6 @@
+services:
+  - type: ClusterIP
+    specs:
+      - name: data
+        port: 4000
+        targetPort: 4000
