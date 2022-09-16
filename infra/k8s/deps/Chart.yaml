@@ -1,5 +1,5 @@
 apiVersion: v2
-name: helm
+name: chart-dependencies
 description: A Helm chart for Kubernetes
 type: application
 version: 0.1.0
@@ -12,11 +12,3 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     version: 10.1.18
     condition: rabbitmq.enabled
-  - name: api-admin
-    repository: file://charts/api-admin
-    version: 0.1.0
-    condition: api-admin.enabled
-  - name: service-datasource
-    repository: file://charts/service-datasource
-    version: 0.1.0
-    condition: service-datasource.enabled

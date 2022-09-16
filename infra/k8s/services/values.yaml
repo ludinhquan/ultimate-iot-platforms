@@ -4,22 +4,6 @@ global:
   environmentRef: 
     APPLICATION_ID: metadata.name
 
-rabbitmq:
-  enabled: true
-  volumePermissions:
-    enabled: true
-  auth:
-    username: admin
-    password: dev
-  extraConfiguration: |-
-    default_vhost = ilotusland
-  service:
-    type: NodePort
-    nodePorts:
-      amqp: 30677
-      manager: 30678
-
-
 api-admin:
   enabled: true
   image:
@@ -35,6 +19,6 @@ service-datasource:
 ingress:
   enabled: true
   paths:
-    - name: dev-api
-      path: /auth/?(.*)
+    - name: api-admin
+      path: /api-admin/?(.*)
       servicePort: 3000
