@@ -1,14 +1,13 @@
 trigger_mode(TRIGGER_MODE_MANUAL)
 
-
 IMAGE_PREFIX="io.platform.iot"
 SERVICE_EXTERNAL="external-services"
 SERVICE_API="iot-platforms"
 
-def resource_name(name):
+def api_resource(name):
   return SERVICE_API + '-' + name; 
 
-def external_resource_name(name):
+def external_resource(name):
   return SERVICE_EXTERNAL + '-' + name; 
 
 def get_image(name):
@@ -21,6 +20,6 @@ docker_build(get_image('service-datasource'), '.', dockerfile='./apps/service-da
 
 k8s_yaml(helm('./infra/k8s/services', name=SERVICE_API))
 
-k8s_resource(resource_name('api-admin'), resource_deps=[external_resource_name('rabbitmq')])
-k8s_resource(resource_name('service-datasource'), resource_deps=[external_resource_name('rabbitmq')])
+k8s_resource(api_resource('api-admin'), resource_deps=[external_resource('rabbitmq')])
+k8s_resource(api_resource('service-datasource'), resource_deps=[external_resource('rabbitmq')])
 

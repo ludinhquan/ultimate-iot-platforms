@@ -48,6 +48,33 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "service-station": {
+      "type": "application",
+      "root": "apps/service-station",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-station/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-station/tsconfig.app.json"
+      }
+    },
+    "data-access": {
+      "type": "library",
+      "root": "libs/data-access",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-access/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-access/tsconfig.lib.json"
+      }
+    },
+    "repo-orm": {
+      "type": "library",
+      "root": "libs/repo-orm",
+      "entryFile": "index",
+      "sourceRoot": "libs/repo-orm/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/repo-orm/tsconfig.lib.json"
+      }
     }
   }
 }

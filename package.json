@@ -23,8 +23,16 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/jwt": "^9.0.0",
+    "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.1.2",
+    "@types/passport-jwt": "^3.0.6",
+    "mongodb": "^4.9.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
@@ -74,7 +82,9 @@
     ],
     "moduleNameMapper": {
       "^@iot-platforms/core(|/.*)$": "<rootDir>/libs/core/src/$1",
-      "^@iot-platforms/common(|/.*)$": "<rootDir>/libs/common/src/$1"
+      "^@iot-platforms/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@iot-platforms/data-access(|/.*)$": "<rootDir>/libs/data-access/src/$1",
+      "^@iot-platforms/repo-orm(|/.*)$": "<rootDir>/libs/repo-orm/src/$1"
     }
   }
 }

@@ -29,7 +29,22 @@
       ],
       "@iot-platforms/common/*": [
         "libs/common/src/*"
+      ],
+      "@iot-platforms/data-access": [
+        "libs/data-access/src"
+      ],
+      "@iot-platforms/data-access/*": [
+        "libs/data-access/src/*"
+      ],
+      "@iot-platforms/repo-orm": [
+        "libs/repo-orm/src"
+      ],
+      "@iot-platforms/repo-orm/*": [
+        "libs/repo-orm/src/*"
       ]
-    }
+    },
+    "typeRoots": [
+      "definitions/*.d.ts"
+    ]
   }
 }
