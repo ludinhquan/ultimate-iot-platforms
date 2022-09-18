@@ -29,7 +29,8 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.1.2",
-    "@types/passport-jwt": "^3.0.6",
+    "amqplib": "^0.10.3",
+    "kafkajs": "^2.2.0",
     "mongodb": "^4.9.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
@@ -41,9 +42,11 @@
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
+    "@types/amqplib": "^0.8.2",
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
     "@types/node": "^16.0.0",
+    "@types/passport-jwt": "^3.0.6",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
@@ -84,7 +87,8 @@
       "^@iot-platforms/core(|/.*)$": "<rootDir>/libs/core/src/$1",
       "^@iot-platforms/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@iot-platforms/data-access(|/.*)$": "<rootDir>/libs/data-access/src/$1",
-      "^@iot-platforms/repo-orm(|/.*)$": "<rootDir>/libs/repo-orm/src/$1"
+      "^@iot-platforms/repo-orm(|/.*)$": "<rootDir>/libs/repo-orm/src/$1",
+      "^@iot-platforms/event-bus(|/.*)$": "<rootDir>/libs/event-bus/src/$1"
     }
   }
 }

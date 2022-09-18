@@ -41,6 +41,12 @@
       ],
       "@iot-platforms/repo-orm/*": [
         "libs/repo-orm/src/*"
+      ],
+      "@iot-platforms/event-bus": [
+        "libs/event-bus/src"
+      ],
+      "@iot-platforms/event-bus/*": [
+        "libs/event-bus/src/*"
       ]
     },
     "typeRoots": [
