@@ -15,12 +15,12 @@ interface IDatasourceRepo {
 export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<Response>>{
   private datasourceRepo: IDatasourceRepo
 
-  async execute(request: CreateDatasourceDTO): Promise<Response> {
-    const {datasourceKey} = request
+  async execute(data: CreateDatasourceDTO): Promise<Response> {
+    const {datasourceKey} = data
     const existed = this.datasourceRepo.exists({key: datasourceKey});
     if(existed) left(Result.fail(`Datasource with key ${datasourceKey} has been created`))
 
-    const keyOrError = DatasourceKey.create({value: request.datasourceKey})
+    const keyOrError = DatasourceKey.create({value: datasourceKey})
     if(keyOrError.isFailure) return left(keyOrError)
 
     const datasourceOrError = Datasource.create({
@@ -30,11 +30,10 @@ export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<Re
     if(datasourceOrError.isFailure) return left(datasourceOrError)
     const datasource = datasourceOrError.getValue()
 
-    const devices = request.devices.map(key => Device.create({
-      key: DeviceKey.create({value: key}).getValue(),
-      datasourceId: datasource.datasourceId,
-    }).getValue())
-    
+    const devices = data.devices.map(
+      key => Device.create({key: DeviceKey.create({value: key}).getValue()}).getValue()
+    )
+
     datasource.addDevices(Devices.create(devices))
 
     await this.datasourceRepo.save(datasource)

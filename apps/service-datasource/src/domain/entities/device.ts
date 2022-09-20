@@ -6,7 +6,7 @@ import {SystemKey} from "./systemKey";
 
 export interface DeviceProps {
   key: DeviceKey,
-  datasourceId: DatasourceId,
+  datasourceId?: DatasourceId,
   systemKey?: SystemKey
 }
 
@@ -33,6 +33,10 @@ export class Device extends Entity<DeviceProps> {
 
   updateSystemKey(systemKey: SystemKey){
     this.props.systemKey = systemKey
+  }
+
+  updateDatasourceId(datasourceId: DatasourceId){
+    this.props.datasourceId = datasourceId
   }
 
   static create(props: DeviceProps, id?: UniqueEntityID): Result<Device>{

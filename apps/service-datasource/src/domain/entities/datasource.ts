@@ -34,7 +34,8 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
   }
 
   public addDevices(devices: Devices){
-    devices.getItems().map(this.props.devices.add.bind(this))
+    devices.getItems().map(device => device.updateDatasourceId(this.datasourceId))
+    this.props.devices = devices
   }
 
   static create(props: DatasourceProps, id?: UniqueEntityID): Result<Datasource>{

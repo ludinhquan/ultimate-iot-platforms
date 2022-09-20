@@ -5,7 +5,7 @@ export class Devices extends WatchedList<Device>{
   private constructor (initialDevices: Device[]) {
     super(initialDevices)
   }
-
+  
   compareItems(a: Device, b: Device): boolean {
     return a.equals(b)
   }

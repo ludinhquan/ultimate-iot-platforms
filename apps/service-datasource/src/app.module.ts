@@ -1,12 +1,11 @@
-import {AuthModule, ServiceRegistryModule} from "@iot-platforms/core";
+import {ServiceRegistryModule} from "@iot-platforms/core";
 import {Module} from "@nestjs/common";
-import {AppController} from "./app.controller";
+import {CreateDatasourceController} from "./useCases/datasource/createDatasource";
 
 @Module({
   imports: [
-    AuthModule, 
     ServiceRegistryModule,
   ],
-  controllers: [AppController]
+  controllers: [CreateDatasourceController]
 })
 export class AppModule { }
