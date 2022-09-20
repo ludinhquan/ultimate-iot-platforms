@@ -13,7 +13,7 @@ export class CreateDatasourceController {
   createDatasource(
     @Body() data: CreateDatasourceDTO
   ){
-    this.multitenant.getTenant('')
+    this.multitenant.getDatasource('5eef80119d4f450011c30d59')
     console.log(data)
   }
 }
