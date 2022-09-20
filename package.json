@@ -39,7 +39,8 @@
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "typeorm": "^0.3.10"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -91,7 +92,8 @@
       "^@iot-platforms/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@iot-platforms/data-access(|/.*)$": "<rootDir>/libs/data-access/src/$1",
       "^@iot-platforms/repo-orm(|/.*)$": "<rootDir>/libs/repo-orm/src/$1",
-      "^@iot-platforms/event-bus(|/.*)$": "<rootDir>/libs/event-bus/src/$1"
+      "^@iot-platforms/event-bus(|/.*)$": "<rootDir>/libs/event-bus/src/$1",
+      "^@iot-platforms/contracts(|/.*)$": "<rootDir>/libs/contracts/src/$1"
     }
   }
 }

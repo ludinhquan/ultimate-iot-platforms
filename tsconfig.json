@@ -47,6 +47,12 @@
       ],
       "@iot-platforms/event-bus/*": [
         "libs/event-bus/src/*"
+      ],
+      "@iot-platforms/contracts": [
+        "libs/contracts/src"
+      ],
+      "@iot-platforms/contracts/*": [
+        "libs/contracts/src/*"
       ]
     },
     "typeRoots": [

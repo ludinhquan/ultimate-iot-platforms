@@ -4,7 +4,7 @@
   "monorepo": true,
   "root": "apps/api-admin",
   "compilerOptions": {
-    "webpack": true,
+    "webpack": false,
     "tsConfigPath": "apps/api-admin/tsconfig.app.json"
   },
   "generateOptions": {
@@ -83,6 +83,15 @@
       "sourceRoot": "libs/event-bus/src",
       "compilerOptions": {
         "tsConfigPath": "libs/event-bus/tsconfig.lib.json"
+      }
+    },
+    "contracts": {
+      "type": "library",
+      "root": "libs/contracts",
+      "entryFile": "index",
+      "sourceRoot": "libs/contracts/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/contracts/tsconfig.lib.json"
       }
     }
   }
