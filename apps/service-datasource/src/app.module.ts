@@ -1,12 +1,12 @@
 import {ServiceRegistryModule} from "@iot-platforms/core";
-import {MongoCoreModule} from "@iot-platforms/data-access/databases";
+import {DataAccessModule} from "@iot-platforms/data-access";
 import {Module} from "@nestjs/common";
 import {CreateDatasourceController} from "./useCases/datasource/createDatasource";
 
 @Module({
   imports: [
     ServiceRegistryModule,
-    MongoCoreModule.forRootAsync()
+    DataAccessModule
   ],
   controllers: [CreateDatasourceController]
 })

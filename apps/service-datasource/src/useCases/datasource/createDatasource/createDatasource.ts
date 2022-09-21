@@ -34,7 +34,7 @@ export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<Re
       key => Device.create({key: DeviceKey.create({value: key}).getValue()}).getValue()
     )
 
-    datasource.addDevices(Devices.create(devices))
+    datasource.addDevices(Devices.create(devices));
 
     await this.datasourceRepo.save(datasource)
 

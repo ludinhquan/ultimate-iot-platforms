@@ -4,7 +4,7 @@ import {ConfigService} from "@nestjs/config";
 import {ObjectId} from "mongodb";
 import * as path from "path";
 import {DataSource} from "typeorm";
-import {OrganizationOrmEntity} from "./admin-entities/organization.orm-entity";
+import {OrganizationOrmEntity} from "./admin-entities";
 
 @Injectable()
 export class MongoMultiTenantService {
@@ -17,7 +17,7 @@ export class MongoMultiTenantService {
     private configService: ConfigService
   ) {}
 
-  async getDatasource(tenantId: string) {
+  async getDatasource(tenantId: string): Promise<DataSource> {
     return new Promise(async res => {
       const tenant = await this.getTenant(tenantId);
       if (this.datasourceMaps.has(tenantId)) {

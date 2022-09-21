@@ -1,5 +1,5 @@
 import {DatasourceType} from 'apps/service-datasource/src/domain';
-import {Column, Entity, ObjectIdColumn} from 'typeorm';
+import {Column, Entity} from 'typeorm';
 import {BaseEntity} from './base.entity';
 
 @Entity('core.datasources')

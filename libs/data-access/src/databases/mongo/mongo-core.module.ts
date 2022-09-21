@@ -1,12 +1,11 @@
-import {DynamicModule, Global, Inject, Module, OnApplicationShutdown} from "@nestjs/common";
+import {DATABASE_ADMIN} from "@iot-platforms/data-access/constants";
+import {DynamicModule, Inject, Module, OnApplicationShutdown} from "@nestjs/common";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import * as path from "path";
 import {DataSource} from "typeorm";
 import {MongoConnectionOptions} from "typeorm/driver/mongodb/MongoConnectionOptions";
 import {MongoMultiTenantService} from "./mongo-multitenant.service";
-import { DATABASE_ADMIN } from "@iot-platforms/data-access/constants";
 
-@Global()
 @Module({
   imports: [ConfigModule]
 })

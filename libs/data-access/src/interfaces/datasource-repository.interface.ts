@@ -1,7 +1,10 @@
 import {Datasource, DatasourceId, DatasourceKey, Devices} from "apps/service-datasource/src/domain";
+import {IRepo} from "./base-repository.interface";
 
-export interface IDatasourceRepository {
-  exists(query: {key?: DatasourceKey, datasourceId?: DatasourceId}): Promise<boolean>,
+export interface IDataSourceRepository extends IRepo{
+  exists(datasourceId: DatasourceId): Promise<boolean>,
+  existByKey(key: DatasourceKey): Promise<boolean>,
   save(datasource: Datasource): Promise<void>,
-  getDevicesByDatasourceId(): Promise<Devices>
+  find(): Promise<Datasource[]>
+  getDevicesByDatasourceId(datasourceId: DatasourceId): Promise<Devices>
 }

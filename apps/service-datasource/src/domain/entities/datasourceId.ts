@@ -6,6 +6,10 @@ export class DatasourceId extends Entity<any> {
     return this._id;
   }
 
+  get value (): number|string {
+    return this._id.toValue();
+  }
+
   private constructor (id?: UniqueEntityID) {
     super(null, id)
   }
