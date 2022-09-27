@@ -1,4 +1,5 @@
 trigger_mode(TRIGGER_MODE_MANUAL)
+allow_k8s_contexts('dev')
 
 IMAGE_PREFIX="io.platform.iot"
 SERVICE_EXTERNAL="external-services"
