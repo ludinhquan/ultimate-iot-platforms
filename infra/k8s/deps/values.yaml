@@ -13,3 +13,10 @@ rabbitmq:
       amqp: 30677
       manager: 30678
 
+redis:
+  enabled: false
+  auth:
+    password: dev
+  service:
+    type: NodePort
+

@@ -12,3 +12,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     version: 10.1.18
     condition: rabbitmq.enabled
+  - name: redis
+    repository: https://charts.bitnami.com/bitnami
+    version: 17.1.6
+    condition: redis.enabled
