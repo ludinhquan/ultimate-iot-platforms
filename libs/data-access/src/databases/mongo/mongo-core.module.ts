@@ -9,9 +9,11 @@ import {MongoMultiTenantService} from "./mongo-multitenant.service";
 @Module({
   imports: [ConfigModule]
 })
-export class MongoCoreModule implements OnApplicationShutdown{
+export class MongoCoreModule implements OnApplicationShutdown {
 
-  constructor(@Inject(DATABASE_ADMIN) private datasourceAdmin: DataSource){}
+  constructor(
+    @Inject(DATABASE_ADMIN) private datasourceAdmin: DataSource,
+  ){}
   
   static forRootAsync(): DynamicModule {
     const adminClientProvider = {

@@ -15,7 +15,7 @@ export class SystemKey extends ValueObject<SystemKeyProps> {
   }
 
   public static create (props: SystemKeyProps): Result<SystemKey> {
-    const nullGuardResult = Guard.againstNullOrUndefined(props.value, 'datasourceKey');
+    const nullGuardResult = Guard.againstNullOrUndefined(props.value, 'systemKey');
 
     if (nullGuardResult.isFailure) return Result.fail(nullGuardResult.getError());
 

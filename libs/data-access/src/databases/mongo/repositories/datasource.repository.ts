@@ -7,13 +7,13 @@ import {DatasourceMapper} from "../mappers";
 
 export class DataSourceRepository implements IDataSourceRepository{
   constructor(
-    private repo: MongoRepository<DatasourceOrmEntity>
+    private repo: MongoRepository<DatasourceOrmEntity>,
   ){ }
 
   private buildBasicQuery(datasource: Partial<Datasource>){
     const query = removeUndefinedProps({
-      _id: datasource.datasourceId.value,
-      key: datasource.key.value,
+      _id: datasource.datasourceId?.value,
+      key: datasource.key?.value,
     })
     return query
   }

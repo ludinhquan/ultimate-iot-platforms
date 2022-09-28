@@ -1,4 +1,4 @@
-import {IntegrationEvent} from '../events';
+import {IntegrationEvent} from '../abstracts';
 import {IEventHandler} from './handler.interface';
 
 export interface SubscribeOptions {

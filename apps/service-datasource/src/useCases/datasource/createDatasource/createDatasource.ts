@@ -1,27 +1,30 @@
 import {Either, left, Result, right, UseCase} from "@iot-platforms/core";
+import {IDataSourceRepository} from "@iot-platforms/data-access";
 import {Datasource, DatasourceKey, Device, DeviceKey, Devices} from "../../../domain";
 import {CreateDatasourceDTO} from "./createDatasourceDTO";
+import {CreateDatasourceErrors} from "./createDatasourceErrors";
 
-type Response = Either<
+type CreateDatasourceResponse = Either<
+  CreateDatasourceErrors.DatasourceAlreadyExist | 
   Result<any>,
-  Result<void>
+  Datasource
 >
 
-interface IDatasourceRepo {
-  exists(query: {key?: string, datasourceId?: string}): Promise<boolean>
-  save(datasource: Datasource): Promise<boolean>
-}
 
-export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<Response>>{
-  private datasourceRepo: IDatasourceRepo
+export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<CreateDatasourceResponse>>{
+  private datasourceRepo: IDataSourceRepository
+  constructor(datasourceRepo: IDataSourceRepository) {
+    this.datasourceRepo = datasourceRepo
+  }
 
-  async execute(data: CreateDatasourceDTO): Promise<Response> {
+  async execute(data: CreateDatasourceDTO): Promise<CreateDatasourceResponse> {
     const {datasourceKey} = data
-    const existed = this.datasourceRepo.exists({key: datasourceKey});
-    if(existed) left(Result.fail(`Datasource with key ${datasourceKey} has been created`))
 
     const keyOrError = DatasourceKey.create({value: datasourceKey})
     if(keyOrError.isFailure) return left(keyOrError)
+
+    const existed = await this.datasourceRepo.existByKey(keyOrError.getValue());
+    if (existed) return left(new CreateDatasourceErrors.DatasourceAlreadyExist(datasourceKey))
 
     const datasourceOrError = Datasource.create({
       key: keyOrError.getValue()
@@ -38,6 +41,6 @@ export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<Re
 
     await this.datasourceRepo.save(datasource)
 
-    return right(Result.ok())
+    return right(datasource)
   }
 }

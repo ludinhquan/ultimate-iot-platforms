@@ -3,7 +3,9 @@ import {MongoCoreModule} from "./databases";
 import {RepositoryManager} from "./repo-manager.service";
 
 @Module({
-  imports: [MongoCoreModule.forRootAsync()],
+  imports: [
+    MongoCoreModule.forRootAsync(),
+  ],
   providers: [RepositoryManager],
   exports: [RepositoryManager]
 })

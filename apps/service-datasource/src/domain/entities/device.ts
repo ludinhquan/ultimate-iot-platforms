@@ -42,7 +42,6 @@ export class Device extends Entity<DeviceProps> {
   static create(props: DeviceProps, id?: UniqueEntityID): Result<Device>{
     const guardResult = Guard.againstNullOrUndefinedBulk([
       { argument: props.key, argumentName: 'deviceKey' },
-      { argument: props.datasourceId, argumentName: 'datasourceId' },
     ])
 
     if(guardResult.isFailure) return Result.fail(guardResult.getError())
