@@ -15,7 +15,9 @@ export class MongoMultiTenantService {
   constructor(
     @Inject(DATABASE_ADMIN) private datasourceAdmin: DataSource,
     private configService: ConfigService
-  ) {}
+  ) {
+    console.log(this.constructor.name)
+  }
 
   async getDatasource(tenantId: string): Promise<DataSource> {
     return new Promise(async res => {
@@ -28,20 +30,19 @@ export class MongoMultiTenantService {
             res(datasource);
           }
         });
-        return datasource
+      } else {
+        const datasource = new DataSource({
+          type: 'mongodb',
+          entities: [
+            path.join(__dirname, '/entities/*.orm-entity.js')
+          ],
+          url: this.getUrl(tenant)
+        })
+        this.datasourceMaps.set(tenantId, datasource);
+        await datasource.initialize()
+        this.logger.log(`Performs connection to database ${tenant.databaseInfo.name} of the tenant ${tenant.name} successfully!`)
+        res(datasource)
       }
-
-      const datasource = new DataSource({
-        type: 'mongodb',
-        entities: [
-          path.join(__dirname, '/entities/*.orm-entity.js')
-        ],
-        url: this.getUrl(tenant)
-      })
-      this.datasourceMaps.set(tenantId, datasource);
-      await datasource.initialize()
-      this.logger.log(`Performs connection to database ${tenant.databaseInfo.name} of the tenant ${tenant.name} successfully!`)
-      return res(datasource)
     })
   }
 

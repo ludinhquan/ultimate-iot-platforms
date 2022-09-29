@@ -1,13 +1,15 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
 import {IDataSourceRepository} from "@iot-platforms/data-access/interfaces";
+import {IDeviceRepository} from "@iot-platforms/data-access/interfaces/device-repository.interface";
 import {Datasource, DatasourceId, DatasourceKey, Devices} from "apps/service-datasource/src/domain";
 import {MongoRepository} from "typeorm";
 import {DatasourceOrmEntity} from "../entities";
 import {DatasourceMapper} from "../mappers";
 
-export class DataSourceRepository implements IDataSourceRepository{
+export class DataSourceRepository implements IDataSourceRepository {
   constructor(
     private repo: MongoRepository<DatasourceOrmEntity>,
+    private deviceRepo: IDeviceRepository
   ){ }
 
   private buildBasicQuery(datasource: Partial<Datasource>){
@@ -38,6 +40,7 @@ export class DataSourceRepository implements IDataSourceRepository{
     const isNewDatasouce = !exists;
     if(isNewDatasouce) {
       await this.repo.save(rawData)
+      await this.deviceRepo.bulkSave(datasource.devices)
       return
     }
 
@@ -48,6 +51,11 @@ export class DataSourceRepository implements IDataSourceRepository{
   async find(): Promise<Datasource[]> {
     const ormEntities = await this.repo.find()
     return ormEntities.map(DatasourceMapper.toDomain)
+  }
+
+  async findByKey(datasourceKey: DatasourceKey): Promise<Datasource | null> {
+    const ormEntity = await this.repo.findOneBy({key: datasourceKey.value})
+    return ormEntity ? DatasourceMapper.toDomain(ormEntity) : null
   }
 
   async getDevicesByDatasourceId(datasourceId: DatasourceId): Promise<Devices> {
