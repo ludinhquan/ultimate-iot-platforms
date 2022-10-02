@@ -20,3 +20,52 @@ redis:
   service:
     type: NodePort
 
+mongodb:
+  enabled: true
+  auth:
+    enabled: true
+    rootUser: root
+    rootPassword: dev
+    usernames:
+      - admin
+    passwords:
+      - dev
+    databases:
+      - api-admin
+  service:
+    type: NodePort
+    nodePorts:
+      mongodb: 30017
+
+timescaledb-single:
+  enabled: true
+  replicaCount: 1
+  nameOverride: timescaledb
+  image:
+    repository: timescale/timescaledb-ha
+    tag: pg14.5-ts2.8.0-latest
+    pullPolicy: Always
+  loadBalancer:
+    enabled: false
+  replicaLoadBalancer:
+    enabled: false
+  service:
+    primary:
+      type: NodePort
+      port: 5432
+      nodePort: 30303
+  secrets:
+    credentials:
+      PATRONI_SUPERUSER_PASSWORD: "supperadmin"
+      PATRONI_REPLICATION_PASSWORD: "replica"
+      PATRONI_admin_PASSWORD: "admin"
+  patroni:
+    postgresql:
+      pg_hba:
+      - local     all             postgres                              peer
+      - local     all             all                                   md5
+      - hostnossl all,replication all                all                md5
+      - hostssl   all             all                127.0.0.1/32       md5
+      - hostssl   all             all                ::1/128            md5
+      - hostssl   replication     standby            all                md5
+      - hostssl   all             all                all                md5

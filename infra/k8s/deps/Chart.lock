@@ -8,5 +8,11 @@ dependencies:
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 17.1.6
-digest: sha256:d735939a5495faf7d8733b7217854f5c31c63252f1448427d03434f87daeaa0f
-generated: "2022-09-20T17:01:55.196952357+07:00"
+- name: mongodb
+  repository: https://charts.bitnami.com/bitnami
+  version: 13.1.7
+- name: timescaledb-single
+  repository: https://charts.timescale.com
+  version: 0.17.0
+digest: sha256:92c8f93c3d905b9eeac7f240930b7575b417e0a4ffb5d1f553693d7fa09244a4
+generated: "2022-10-02T10:33:39.564228837+07:00"

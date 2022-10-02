@@ -16,3 +16,11 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     version: 17.1.6
     condition: redis.enabled
+  - name: mongodb
+    repository: https://charts.bitnami.com/bitnami
+    version: 13.1.7
+    condition: mongodb.enabled
+  - name: timescaledb-single
+    repository: https://charts.timescale.com
+    version: 0.17.0
+    condition: timescaledb-single.enabled
