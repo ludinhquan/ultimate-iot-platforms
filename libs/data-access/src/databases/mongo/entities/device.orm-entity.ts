@@ -13,5 +13,5 @@ export class DeviceOrmEntity extends BaseEntity {
   systemKey: string;
 
   @Column()
-  status: string;
+  status?: string;
 }

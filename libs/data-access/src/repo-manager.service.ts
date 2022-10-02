@@ -12,9 +12,7 @@ export class RepositoryManager implements IRepositoryManager {
 
   constructor(
     private mongoMultiTenantService: MongoMultiTenantService,
-  ){ 
-    console.log(this.constructor.name)
-  }
+  ){ }
 
   private getRepoToken(tentant: IOrganization, repo: ClassType<IRepo>){
     return [tentant.id, repo.constructor.name].join('_')

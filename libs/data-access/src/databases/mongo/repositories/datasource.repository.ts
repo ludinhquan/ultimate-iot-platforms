@@ -59,6 +59,6 @@ export class DataSourceRepository implements IDataSourceRepository {
   }
 
   async getDevicesByDatasourceId(datasourceId: DatasourceId): Promise<Devices> {
-    return
+    return this.deviceRepo.find({datasourceId})
   }
 }
