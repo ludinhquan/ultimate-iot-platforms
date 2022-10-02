@@ -13,6 +13,22 @@ export interface ConnectionItemProps {
 export class ConnectionItem extends Entity<ConnectionItemProps> {
   static defaultRatio = 1
 
+  get deviceKey(){
+    return this.props.deviceKey
+  }
+
+  get systemKey(){
+    return this.props.systemKey
+  }
+
+  get status(){
+    return this.props.status
+  }
+
+  get ratio(){
+    return this.props.ratio
+  }
+
   private constructor(props: ConnectionItemProps, id?: UniqueEntityID) {
     super(props, id)
   }

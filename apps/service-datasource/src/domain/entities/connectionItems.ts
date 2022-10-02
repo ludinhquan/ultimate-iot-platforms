@@ -6,6 +6,10 @@ export class ConnectionItems extends WatchedList<ConnectionItem>{
     super(initialConnectionItems)
   }
 
+  getUniqueField(item: ConnectionItem): string {
+    return item.deviceKey.value
+  }
+
   compareItems(a: ConnectionItem, b: ConnectionItem): boolean {
     return a.equals(b)
   }

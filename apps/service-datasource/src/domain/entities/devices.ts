@@ -6,6 +6,10 @@ export class Devices extends WatchedList<Device>{
     super(initialDevices)
   }
   
+  getUniqueField(item: Device): string {
+    return item.key.value
+  }
+
   compareItems(a: Device, b: Device): boolean {
     return a.equals(b)
   }

@@ -1,7 +1,7 @@
 import {HttpErrors, HttpExceptionKey} from "@iot-platforms/core";
 
 export namespace AddNewDevicesErrors {
-  export class DatasourceDontExist extends HttpErrors {
+  export class DatasourceDontExists extends HttpErrors {
     code = 422
     key = HttpExceptionKey.NOT_FOUND_EXCEPTION
 

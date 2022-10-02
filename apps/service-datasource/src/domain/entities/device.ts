@@ -7,7 +7,7 @@ import {SystemKey} from "./systemKey";
 export interface DeviceProps {
   key: DeviceKey,
   datasourceId?: DatasourceId,
-  systemKey?: SystemKey
+  systemKey?: SystemKey | null
 }
 
 export class Device extends Entity<DeviceProps> {
@@ -41,7 +41,7 @@ export class Device extends Entity<DeviceProps> {
 
   static create(props: DeviceProps, id?: UniqueEntityID): Result<Device>{
     const guardResult = Guard.againstNullOrUndefinedBulk([
-      { argument: props.key, argumentName: 'deviceKey' },
+      {argument: props.key, argumentName: 'deviceKey'},
     ])
 
     if(guardResult.isFailure) return Result.fail(guardResult.getError())
