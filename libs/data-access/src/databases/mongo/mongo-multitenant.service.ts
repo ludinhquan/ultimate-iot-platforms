@@ -1,5 +1,5 @@
 import {DATABASE_ADMIN} from "@iot-platforms/data-access/constants/shared.constants";
-import {Inject, Injectable, Logger} from "@nestjs/common";
+import {Inject, Injectable, Logger, OnApplicationShutdown} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {ObjectId} from "mongodb";
 import * as path from "path";
@@ -7,7 +7,7 @@ import {DataSource} from "typeorm";
 import {OrganizationOrmEntity} from "./admin-entities";
 
 @Injectable()
-export class MongoMultiTenantService {
+export class MongoMultiTenantService implements OnApplicationShutdown{
   private logger = new Logger(this.constructor.name)
   private tenantMaps: Map<string, OrganizationOrmEntity> = new Map()
   private datasourceMaps: Map<string, DataSource> = new Map()
@@ -15,9 +15,7 @@ export class MongoMultiTenantService {
   constructor(
     @Inject(DATABASE_ADMIN) private datasourceAdmin: DataSource,
     private configService: ConfigService
-  ) {
-    console.log(this.constructor.name)
-  }
+  ) {}
 
   async getDatasource(tenantId: string): Promise<DataSource> {
     return new Promise(async res => {
@@ -47,14 +45,17 @@ export class MongoMultiTenantService {
   }
 
   private getUrl(tenant: OrganizationOrmEntity) {
-    const {user, pwd: pass, port, name: database} = tenant.databaseInfo
+    // const {user, pwd: pass, port, name: database} = tenant.databaseInfo
+    const {name: database} = tenant.databaseInfo
     let host = tenant.databaseInfo.address
 
     // "NODE_ENV" and "MONGO_HOST" is used for development purpose
     const isDevelopment = this.configService.get('NODE_ENV') === 'development'
     if (isDevelopment) host = this.configService.get('MONGO_HOST')
 
-    return `mongodb://${user}:${pass}@${host}:${port}/${database}`
+    // return `mongodb://${user}:${pass}@${host}:${port}/${database}`
+    console.log(host)
+    return host
   }
 
   async getTenant(tenantId: string): Promise<OrganizationOrmEntity> {
@@ -68,5 +69,15 @@ export class MongoMultiTenantService {
     }
     this.tenantMaps.set(tenantId, tenant);
     return tenant
+  }
+
+  async onApplicationShutdown() {
+    const destroyPromises = [...this.datasourceMaps]
+    .map(([_, datasource]) => {
+      if(datasource.isInitialized) 
+        return datasource.destroy()
+    })
+
+    await Promise.all(destroyPromises)
   }
 }
