@@ -28,9 +28,16 @@ export class AddNewDevices implements UseCase<AddNewDevicesDTO, Promise<AddNewDe
 
     const devices = await this.datasourceRepo.getDevicesByDatasourceId(datasource.datasourceId);
 
-    const newDevices = data.devices.map(
-      key => Device.create({key: DeviceKey.create({value: key}).getValue()}).getValue()
-    )
+    const newDevices = data.devices
+    .filter(key => !devices.exists(key))
+    .map(
+      key => Device.create({
+        key: DeviceKey.create({value: key}).getValue(),
+        datasourceId: datasource.datasourceId,
+      }).getValue(),
+    );
+
+    console.log(newDevices)
 
     return right(null)
   }

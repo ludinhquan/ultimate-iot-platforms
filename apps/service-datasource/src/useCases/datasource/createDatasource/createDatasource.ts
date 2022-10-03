@@ -33,11 +33,14 @@ export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<Cr
     if(datasourceOrError.isFailure) return left(datasourceOrError)
     const datasource = datasourceOrError.getValue()
 
-    const devices = data.devices.map(
-      key => Device.create({key: DeviceKey.create({value: key}).getValue()}).getValue()
+    const deviceList = data.devices.map(
+      key => Device.create({
+        key: DeviceKey.create({value: key}).getValue(),
+        datasourceId: datasource.datasourceId
+      }).getValue()
     )
 
-    datasource.addDevices(Devices.create(devices));
+    datasource.addDevices(Devices.create(deviceList));
 
     await this.datasourceRepo.save(datasource)
 

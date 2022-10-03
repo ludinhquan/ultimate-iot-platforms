@@ -9,6 +9,10 @@ export abstract class Entity<T>{
     return this._id;
   }
 
+  getValue<T extends string | number = string>(): T {
+    return this._id.toValue() as T;
+  }
+
   constructor(props: T, id?: UniqueEntityID){
     this._id = id ? id : new UniqueEntityID();
     this.props = props

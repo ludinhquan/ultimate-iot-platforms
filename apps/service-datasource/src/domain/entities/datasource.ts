@@ -34,7 +34,6 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
   }
 
   public addDevices(devices: Devices){
-    devices.getItems().map(device => device.updateDatasourceId(this.datasourceId))
     this.props.devices = devices
   }
 

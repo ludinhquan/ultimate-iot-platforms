@@ -21,8 +21,8 @@ export class DeviceRepository implements IDeviceRepository {
 
   async bulkSave(devices: Devices) {
     const list = devices.getItems().map(DeviceMapper.toPersistence)
-    const insertResult = await this.repo.insert(list)
-    this.logger.log(insertResult)
+    const insertResult = await this.repo.save(list)
+    this.logger.debug('Insert devices result:', ...insertResult)
     return true
   }
 

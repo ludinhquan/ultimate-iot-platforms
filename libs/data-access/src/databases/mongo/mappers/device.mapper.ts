@@ -16,9 +16,9 @@ export class DeviceMapper {
 
   static toPersistence(entity: Device): DeviceOrmEntity {
     return {
-      _id: entity.datasourceId.value as string,
+      _id: entity.deviceId.value,
+      datasourceId: entity.datasourceId.value,
       key: entity.key.value,
-      datasourceId: entity.datasourceId.value as string,
       systemKey: entity.systemKey ? entity.systemKey.value : null,
     }
   }

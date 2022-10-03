@@ -54,7 +54,6 @@ export class MongoMultiTenantService implements OnApplicationShutdown{
     if (isDevelopment) host = this.configService.get('MONGO_HOST')
 
     // return `mongodb://${user}:${pass}@${host}:${port}/${database}`
-    console.log(host)
     return host
   }
 

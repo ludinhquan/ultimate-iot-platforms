@@ -12,7 +12,7 @@ export abstract class WatchedList<T> {
   abstract compareItems (a: T, b: T): boolean;
 
   private toMap(list: T[]){
-    return new Map(list.map(item => [item[this.getUniqueField(item)], item]))
+    return new Map(list.map(item => [this.getUniqueField(item), item]))
   }
 
   private mapToArray(mapItems: MapItems<T>){

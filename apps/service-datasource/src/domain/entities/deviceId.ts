@@ -2,8 +2,8 @@ import {Entity, Result, UniqueEntityID} from "@iot-platforms/core";
 
 export class DeviceId extends Entity<any> {
 
-  get id (): UniqueEntityID {
-    return this._id;
+  get value () {
+    return this.getValue<string>();
   }
 
   private constructor (id?: UniqueEntityID) {
