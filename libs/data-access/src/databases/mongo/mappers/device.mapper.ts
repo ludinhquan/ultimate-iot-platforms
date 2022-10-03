@@ -1,5 +1,5 @@
 import {UniqueEntityID} from "@iot-platforms/core";
-import {DatasourceId, Device, DeviceKey, SystemKey} from "apps/service-datasource/src/domain";
+import {DatasourceId, Device, DeviceKey, SystemDeviceKey} from "apps/service-datasource/src/domain";
 import {DeviceOrmEntity} from "../entities";
 
 export class DeviceMapper {
@@ -8,7 +8,7 @@ export class DeviceMapper {
       {
         key: DeviceKey.create({value: ormEntity.key}).getValue(),
         datasourceId: DatasourceId.create(new UniqueEntityID(ormEntity.datasourceId)).getValue(),
-        systemKey: ormEntity.systemKey ? SystemKey.create({value: ormEntity.systemKey}).getValue() : null,
+        systemKey: ormEntity.systemKey ? SystemDeviceKey.create({value: ormEntity.systemKey}).getValue() : null,
       },
       new UniqueEntityID(ormEntity._id))
       .getValue()

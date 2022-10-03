@@ -16,6 +16,5 @@ export * from './devices'
 
 export * from './stationId'
 
-export * from './systemKey'
-
+export * from './systemDeviceKey'
 

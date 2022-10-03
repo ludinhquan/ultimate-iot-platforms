@@ -11,7 +11,7 @@ type CreateDatasourceResponse = Either<
 >
 
 
-export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<CreateDatasourceResponse>>{
+export class CreateDatasourceUseCase implements UseCase<CreateDatasourceDTO, Promise<CreateDatasourceResponse>>{
   private datasourceRepo: IDataSourceRepository
   constructor(datasourceRepo: IDataSourceRepository) {
     this.datasourceRepo = datasourceRepo
@@ -40,7 +40,7 @@ export class CreateDatasource implements UseCase<CreateDatasourceDTO, Promise<Cr
       }).getValue()
     )
 
-    datasource.addDevices(Devices.create(deviceList));
+    datasource.updateDevices(Devices.create(deviceList));
 
     await this.datasourceRepo.save(datasource)
 

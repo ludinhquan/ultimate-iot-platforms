@@ -2,12 +2,12 @@ import {Entity, Guard, Result, UniqueEntityID} from "@iot-platforms/core";
 import {DatasourceId} from "./datasourceId";
 import {DeviceId} from "./deviceId";
 import {DeviceKey} from "./deviceKey";
-import {SystemKey} from "./systemKey";
+import {SystemDeviceKey} from "./systemDeviceKey";
 
 export interface DeviceProps {
   key: DeviceKey,
   datasourceId: DatasourceId,
-  systemKey?: SystemKey | null
+  systemKey?: SystemDeviceKey | null
 }
 
 export class Device extends Entity<DeviceProps> {
@@ -31,7 +31,7 @@ export class Device extends Entity<DeviceProps> {
     super(props, id)
   }
 
-  updateSystemKey(systemKey: SystemKey){
+  updateSystemKey(systemKey: SystemDeviceKey){
     this.props.systemKey = systemKey
   }
 

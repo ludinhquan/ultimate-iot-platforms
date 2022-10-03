@@ -1,6 +1,6 @@
 import {Either, left, Result, right, UseCase} from "@iot-platforms/core";
 import {IDataSourceRepository} from "@iot-platforms/data-access";
-import {DatasourceKey, Device, DeviceKey, Devices} from "apps/service-datasource/src/domain";
+import {DatasourceKey, DatasourceService, Device, DeviceKey, Devices} from "apps/service-datasource/src/domain";
 import {AddNewDevicesDTO} from "./addNewDevicesDTO";
 import {AddNewDevicesErrors} from "./addNewDevicesErrors";
 
@@ -10,11 +10,11 @@ type AddNewDevicesResponse = Either<
   null
 >
 
-export class AddNewDevices implements UseCase<AddNewDevicesDTO, Promise<AddNewDevicesResponse>>{
-  private datasourceRepo: IDataSourceRepository
-
-  constructor(datasourceRepo: IDataSourceRepository) {
-    this.datasourceRepo = datasourceRepo
+export class AddNewDevicesUseCase implements UseCase<AddNewDevicesDTO, Promise<AddNewDevicesResponse>>{
+  constructor(
+    private datasourceRepo: IDataSourceRepository,
+    private datasourceService: DatasourceService
+  ) {
   }
 
   async execute(data: AddNewDevicesDTO): Promise<AddNewDevicesResponse> {
@@ -37,8 +37,7 @@ export class AddNewDevices implements UseCase<AddNewDevicesDTO, Promise<AddNewDe
       }).getValue(),
     );
 
-    
-    datasource.addDevices(Devices.create(newDevices))
+    datasource.updateDevices(Devices.create(newDevices))
     await this.datasourceRepo.save(datasource)
 
     return right(null)

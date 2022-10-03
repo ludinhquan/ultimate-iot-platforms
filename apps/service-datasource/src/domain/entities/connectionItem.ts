@@ -1,11 +1,11 @@
 import {Entity, Guard, Result, UniqueEntityID} from "@iot-platforms/core";
 import {ConnectionItemStatus} from "./connectionItemStatus";
 import {DeviceKey} from "./deviceKey";
-import {SystemKey} from "./systemKey";
+import {SystemDeviceKey} from "./systemDeviceKey";
 
 export interface ConnectionItemProps {
   deviceKey: DeviceKey,
-  systemKey?: SystemKey,
+  systemKey?: SystemDeviceKey,
   status?: ConnectionItemStatus
   ratio?: number,
 }

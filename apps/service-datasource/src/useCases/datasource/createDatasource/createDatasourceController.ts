@@ -3,7 +3,7 @@ import {ErrorsInterceptor} from "@iot-platforms/common/interceptors/error.interc
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {RepositoryManager} from "@iot-platforms/data-access/repo-manager.service";
 import {Body, Controller, Post, UseGuards, UseInterceptors} from "@nestjs/common";
-import {CreateDatasource} from "./createDatasource";
+import {CreateDatasourceUseCase} from "./createDatasource";
 import {CreateDatasourceDTO} from "./createDatasourceDTO";
 
 @Controller(SERVICE_DATASOURCE)
@@ -20,7 +20,7 @@ export class CreateDatasourceController {
     @CurrentOrganization() tentant: IOrganization
   ){
     const datasourceRepo = await this.repoManager.datasourceRepo(tentant)
-    const useCase = new CreateDatasource(datasourceRepo)
+    const useCase = new CreateDatasourceUseCase(datasourceRepo)
 
     const result = await useCase.execute(createDto);
     if (result.isLeft()) {

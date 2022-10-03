@@ -33,7 +33,7 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
     super(props, id)
   }
 
-  public addDevices(devices: Devices){
+  public updateDevices(devices: Devices){
     this.props.devices = devices
   }
 
