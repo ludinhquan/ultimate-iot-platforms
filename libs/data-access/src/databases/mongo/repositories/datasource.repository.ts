@@ -45,7 +45,8 @@ export class DataSourceRepository implements IDataSourceRepository {
     }
 
     const query = this.buildBasicQuery({datasourceId: datasource.datasourceId})
-    await this.repo.updateOne(query, rawData)
+    await this.repo.updateOne(query, {$set: rawData})
+    await this.deviceRepo.bulkSave(datasource.devices)
   }
   
   async find(): Promise<Datasource[]> {

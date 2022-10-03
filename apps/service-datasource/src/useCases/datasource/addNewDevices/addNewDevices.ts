@@ -1,6 +1,6 @@
 import {Either, left, Result, right, UseCase} from "@iot-platforms/core";
 import {IDataSourceRepository} from "@iot-platforms/data-access";
-import {DatasourceKey, Device, DeviceKey} from "apps/service-datasource/src/domain";
+import {DatasourceKey, Device, DeviceKey, Devices} from "apps/service-datasource/src/domain";
 import {AddNewDevicesDTO} from "./addNewDevicesDTO";
 import {AddNewDevicesErrors} from "./addNewDevicesErrors";
 
@@ -37,7 +37,9 @@ export class AddNewDevices implements UseCase<AddNewDevicesDTO, Promise<AddNewDe
       }).getValue(),
     );
 
-    console.log(newDevices)
+    
+    datasource.addDevices(Devices.create(newDevices))
+    await this.datasourceRepo.save(datasource)
 
     return right(null)
   }
