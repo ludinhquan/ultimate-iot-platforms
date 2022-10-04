@@ -37,8 +37,8 @@ export class Result<T> {
     return this.value;
   }
 
-  public getError (): T {
-    return this.error as T;
+  public getError<R extends T | string>(): R {
+    return this.error as R;
   }
 
   public static ok<U> (value?: U) : Result<U> {

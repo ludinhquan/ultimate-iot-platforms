@@ -15,7 +15,7 @@ export class DeviceKey extends ValueObject<DeviceKeyProps> {
   }
 
   public static create (props: DeviceKeyProps): Result<DeviceKey> {
-    const nullGuardResult = Guard.againstNullOrUndefined(props.value, 'datasourceKey');
+    const nullGuardResult = Guard.againstNullOrUndefined(props.value, 'deviceKey');
 
     if (nullGuardResult.isFailure) return Result.fail(nullGuardResult.getError());
 

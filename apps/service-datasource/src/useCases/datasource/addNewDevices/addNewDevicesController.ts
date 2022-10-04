@@ -3,7 +3,6 @@ import {ErrorsInterceptor} from "@iot-platforms/common/interceptors/error.interc
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {RepositoryManager} from "@iot-platforms/data-access/repo-manager.service";
 import {Body, Controller, Post, UseGuards, UseInterceptors} from "@nestjs/common";
-import {DatasourceService} from "apps/service-datasource/src/domain";
 import {AddNewDevicesUseCase} from "./addNewDevices";
 import {AddNewDevicesDTO} from "./addNewDevicesDTO";
 
@@ -13,7 +12,6 @@ import {AddNewDevicesDTO} from "./addNewDevicesDTO";
 export class DatasourceAddNewDevicesController {
   constructor(
     private repoManager: RepositoryManager,
-    private datasourceHelper: DatasourceService
   ){}
 
   @Post('/add')
@@ -22,7 +20,7 @@ export class DatasourceAddNewDevicesController {
     @CurrentOrganization() tentant: IOrganization
   ){
     const datasourceRepo = await this.repoManager.datasourceRepo(tentant)
-    const useCase = new AddNewDevicesUseCase(datasourceRepo, this.datasourceHelper)
+    const useCase = new AddNewDevicesUseCase(datasourceRepo)
 
     const result = await useCase.execute(createDto);
     if (result.isLeft()) {

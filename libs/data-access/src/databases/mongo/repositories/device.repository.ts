@@ -32,6 +32,6 @@ export class DeviceRepository implements IDeviceRepository {
 
     const list = await this.repo.find(query)
 
-    return Devices.create(list.map(DeviceMapper.toDomain))
+    return Devices.create(list.map(DeviceMapper.toDomain)).getValue()
   }
 }

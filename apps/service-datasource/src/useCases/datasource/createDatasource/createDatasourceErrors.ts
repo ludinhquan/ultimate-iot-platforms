@@ -9,4 +9,13 @@ export namespace CreateDatasourceErrors {
       super(`Datasource with key ${key} has been created`)
     }
   }
+
+  export class DeviceKeyIsDuplicate extends HttpErrors {
+    code = 422
+    key = HttpExceptionKey.NOT_FOUND_EXCEPTION
+
+    constructor(){
+      super(`Device key is duplicate`)
+    }
+  }
 }

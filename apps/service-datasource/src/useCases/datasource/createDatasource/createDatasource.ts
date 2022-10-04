@@ -17,6 +17,19 @@ export class CreateDatasourceUseCase implements UseCase<CreateDatasourceDTO, Pro
     this.datasourceRepo = datasourceRepo
   }
 
+  async getDevicesFromDTO(datasource: Datasource, deviceKeys: string[]){
+    const newDevices = deviceKeys
+    .map(
+      key => Device.create({
+        key: DeviceKey.create({value: key}).getValue(),
+        datasourceId: datasource.datasourceId,
+      }).getValue(),
+    );
+    
+    const devicesOrError = Devices.create(newDevices)
+    return devicesOrError
+  }
+
   async execute(data: CreateDatasourceDTO): Promise<CreateDatasourceResponse> {
     const {datasourceKey} = data
 
@@ -33,15 +46,10 @@ export class CreateDatasourceUseCase implements UseCase<CreateDatasourceDTO, Pro
     if(datasourceOrError.isFailure) return left(datasourceOrError)
     const datasource = datasourceOrError.getValue()
 
-    const deviceList = data.devices.map(
-      key => Device.create({
-        key: DeviceKey.create({value: key}).getValue(),
-        datasourceId: datasource.datasourceId
-      }).getValue()
-    )
+    const devices = await this.getDevicesFromDTO(datasource, data.devices)
+    if(devices.isFailure) return left(new CreateDatasourceErrors.DeviceKeyIsDuplicate())
 
-    datasource.updateDevices(Devices.create(deviceList));
-
+    datasource.updateDevices(devices.getValue());
     await this.datasourceRepo.save(datasource)
 
     return right(datasource)

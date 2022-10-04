@@ -4,10 +4,10 @@ authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDJmMmEyODdjNGYx
 
 {
     "datasourceKey": "DL 01",
-    "devices": ["pH", "COD", "TSS"]
+    "devices": ["TSS", "COD", "TSS"]
 }
 
-POST localhost:4000/datasources/add
+POST localhost:4000/datasources
 content-type: application/json
 authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDJmMmEyODdjNGYxMDAwMWJjZjNkMzEiLCJmaXJzdE5hbWUiOiJRdcOibiIsImxhc3ROYW1lIjoiTOG7ryDEkMOsbmggUXXDom4iLCJpc0FkbWluIjp0cnVlLCJpc0FjdGl2ZSI6dHJ1ZSwiaXNPd25lciI6dHJ1ZSwib3JnYW5pemF0aW9uIjp7Il9pZCI6IjVlZWY4MDExOWQ0ZjQ1MDAxMWMzMGQ1OSIsIm5hbWUiOiJpTG90dXNMYW5kIFZpZXQgTmFtIEpTQy4ifSwiaWF0IjoxNjYxNTk3MjQzfQ.aBv-IScFCG5Usgr6XOfz43LMW9iikjiZlSeGOBwbvik
 

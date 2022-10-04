@@ -1,4 +1,4 @@
-import {WatchedList} from "@iot-platforms/core";
+import {Result, WatchedList} from "@iot-platforms/core";
 import {Device} from "./device";
 
 export class Devices extends WatchedList<Device>{
@@ -14,7 +14,9 @@ export class Devices extends WatchedList<Device>{
     return a.equals(b)
   }
 
-  static create(devices?: Device[]){
-    return new Devices(devices ?? [])
+  static create(list?: Device[]): Result<Devices> {
+    const devices = new Devices(list ?? []);
+    if (list.length !== devices.size) return Result.fail('Device key is not allowed duplicate');
+    return Result.ok(devices)
   }
 }

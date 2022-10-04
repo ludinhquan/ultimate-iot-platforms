@@ -3,6 +3,10 @@ type MapItems<T> = Map<Field, T>
 
 export abstract class WatchedList<T> {
   private items: MapItems<T>
+ 
+  get size() {
+    return this.items.size
+  }
 
   constructor (initialItems?: T[]) {
     this.items = this.toMap(initialItems ?? [])
