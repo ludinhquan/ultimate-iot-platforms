@@ -10,7 +10,6 @@ type CreateDatasourceResponse = Either<
   Datasource
 >
 
-
 export class CreateDatasourceUseCase implements UseCase<CreateDatasourceDTO, Promise<CreateDatasourceResponse>>{
   private datasourceRepo: IDataSourceRepository
   constructor(datasourceRepo: IDataSourceRepository) {
@@ -50,8 +49,7 @@ export class CreateDatasourceUseCase implements UseCase<CreateDatasourceDTO, Pro
       key: keyOrError.getValue()
     })
 
-    if(datasourceOrError.isFailure) 
-      return left(datasourceOrError)
+    if(datasourceOrError.isFailure) return left(datasourceOrError)
 
     const datasource = datasourceOrError.getValue()
 

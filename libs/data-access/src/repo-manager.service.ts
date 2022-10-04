@@ -15,7 +15,7 @@ export class RepositoryManager implements IRepositoryManager {
   ){ }
 
   private getRepoToken(tenantId: string, repo: ClassType<IRepo>){
-    return [tenantId, repo.constructor.name].join('_')
+    return [tenantId, repo.name].join('_')
   }
 
   private async getRepository<Entity extends ObjectLiteral>(tenantId: string, entity: EntityTarget<Entity>): Promise<MongoRepository<Entity>>{
@@ -53,8 +53,8 @@ export class RepositoryManager implements IRepositoryManager {
   async systemDeviceRepo(tenantId: string): Promise<SystemDeviceRepository> {
     const token = this.getRepoToken(tenantId, SystemDeviceRepository);
     if (!this.repoMaps.has(token)) {
-      const deviceRepo = await this.getRepository(tenantId, SystemDeviceOrmEntity);
-      const repo = new SystemDeviceRepository(deviceRepo)
+      const systemDeviceRepo = await this.getRepository(tenantId, SystemDeviceOrmEntity);
+      const repo = new SystemDeviceRepository(systemDeviceRepo)
       this.repoMaps.set(token, repo)
     }
     return this.repoMaps.get(token) as SystemDeviceRepository
