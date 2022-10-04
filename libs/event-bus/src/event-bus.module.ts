@@ -24,7 +24,7 @@ export class EventBusModule implements OnApplicationBootstrap, OnApplicationShut
       const isHandler = instance instanceof Object && Reflect.hasMetadata(EventBusHandlerToken, instance)
       if (!isHandler) return
       const subscribeOptions: SubscribeOptions = Reflect.getMetadata(EventBusHandlerToken, instance)
-      this.eventBus.subscribe(subscribeOptions.event, wrapper.instance);
+      this.eventBus.subscribe(subscribeOptions.event, instance);
     });
   }
 

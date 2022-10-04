@@ -31,8 +31,8 @@ export class Device extends Entity<DeviceProps> {
     super(props, id)
   }
 
-  updateSystemKey(systemKey: SystemDeviceKey){
-    this.props.systemKey = systemKey
+  updateSystemKey(systemKey?: SystemDeviceKey){
+    this.props.systemKey = systemKey ?? null
   }
 
 

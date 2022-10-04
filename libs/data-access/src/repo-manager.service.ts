@@ -1,8 +1,8 @@
 import {Injectable} from "@nestjs/common";
 import {EntityTarget, MongoRepository, ObjectLiteral} from "typeorm";
 import {MongoMultiTenantService} from "./databases";
-import {DatasourceOrmEntity, DeviceOrmEntity} from "./databases/mongo/entities";
-import {DeviceRepository} from "./databases/mongo/repositories";
+import {DatasourceOrmEntity, DeviceOrmEntity, SystemDeviceOrmEntity} from "./databases/mongo/entities";
+import {DeviceRepository, SystemDeviceRepository} from "./databases/mongo/repositories";
 import {DataSourceRepository} from "./databases/mongo/repositories/datasource.repository";
 import {IRepo, IRepositoryManager} from "./interfaces";
 
@@ -14,8 +14,8 @@ export class RepositoryManager implements IRepositoryManager {
     private mongoMultiTenantService: MongoMultiTenantService,
   ){ }
 
-  private getRepoToken(tentant: IOrganization, repo: ClassType<IRepo>){
-    return [tentant.id, repo.constructor.name].join('_')
+  private getRepoToken(tenantId: string, repo: ClassType<IRepo>){
+    return [tenantId, repo.constructor.name].join('_')
   }
 
   private async getRepository<Entity extends ObjectLiteral>(tenantId: string, entity: EntityTarget<Entity>): Promise<MongoRepository<Entity>>{
@@ -29,30 +29,34 @@ export class RepositoryManager implements IRepositoryManager {
     })
   }
 
-  async datasourceRepo(
-    tentant: IOrganization,
-  ): Promise<DataSourceRepository> {
-    const tenantId = tentant.id;
-    const token = this.getRepoToken(tentant, DataSourceRepository);
+  async datasourceRepo(tenantId: string): Promise<DataSourceRepository> {
+    const token = this.getRepoToken(tenantId, DataSourceRepository);
     if (!this.repoMaps.has(token)) {
       const datasourceMongoRepo = await this.getRepository(tenantId, DatasourceOrmEntity)
-      const deviceRepo = await this.deviceRepo(tentant);
+      const deviceRepo = await this.deviceRepo(tenantId);
       const repo = new DataSourceRepository(datasourceMongoRepo, deviceRepo)
       this.repoMaps.set(token, repo)
     }
     return this.repoMaps.get(token) as DataSourceRepository
   }
 
-  async deviceRepo(
-    tentant: IOrganization,
-  ): Promise<DeviceRepository> {
-    const tenantId = tentant.id;
-    const token = this.getRepoToken(tentant, DataSourceRepository);
+  async deviceRepo(tenantId: string): Promise<DeviceRepository> {
+    const token = this.getRepoToken(tenantId, DataSourceRepository);
     if (!this.repoMaps.has(token)) {
-      const deviceRepo = await this.getRepository(tenantId, DeviceOrmEntity)
+      const deviceRepo = await this.getRepository(tenantId, DeviceOrmEntity);
       const repo = new DeviceRepository(deviceRepo)
       this.repoMaps.set(token, repo)
     }
     return this.repoMaps.get(token) as DeviceRepository
+  }
+
+  async systemDeviceRepo(tenantId: string): Promise<SystemDeviceRepository> {
+    const token = this.getRepoToken(tenantId, SystemDeviceRepository);
+    if (!this.repoMaps.has(token)) {
+      const deviceRepo = await this.getRepository(tenantId, SystemDeviceOrmEntity);
+      const repo = new SystemDeviceRepository(deviceRepo)
+      this.repoMaps.set(token, repo)
+    }
+    return this.repoMaps.get(token) as SystemDeviceRepository
   }
 }

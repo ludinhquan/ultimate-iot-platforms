@@ -56,7 +56,7 @@ export class KafkaEventBus implements IEventBus {
           const data = new event()
           const result = await handler.handle(data, jsonData)
           console.log(payload.topic, handler.constructor.name)
-          if (result.isOk()) await consumer.commitOffsets([
+          if (result.isSuccess) await consumer.commitOffsets([
             {topic: payload.topic, partition: payload.partition, offset: payload.message.offset}
           ])
         } catch (e) {}

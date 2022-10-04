@@ -19,7 +19,7 @@ export class CreateDatasourceController {
     @Body() createDto: CreateDatasourceDTO,
     @CurrentOrganization() tentant: IOrganization
   ){
-    const datasourceRepo = await this.repoManager.datasourceRepo(tentant)
+    const datasourceRepo = await this.repoManager.datasourceRepo(tentant.id)
     const useCase = new CreateDatasourceUseCase(datasourceRepo)
 
     const result = await useCase.execute(createDto);

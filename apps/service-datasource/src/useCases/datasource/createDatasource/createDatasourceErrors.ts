@@ -10,12 +10,12 @@ export namespace CreateDatasourceErrors {
     }
   }
 
-  export class DeviceKeyIsDuplicate extends HttpErrors {
+  export class DeviceKeyIsInvalid extends HttpErrors {
     code = 422
     key = HttpExceptionKey.NOT_FOUND_EXCEPTION
 
-    constructor(){
-      super(`Device key is duplicate`)
+    constructor(message: string){
+      super(message)
     }
   }
 }

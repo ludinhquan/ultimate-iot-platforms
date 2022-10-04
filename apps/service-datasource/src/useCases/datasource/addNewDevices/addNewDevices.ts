@@ -25,11 +25,11 @@ export class AddNewDevicesUseCase implements UseCase<AddNewDevicesDTO, Promise<A
 
     if(result.isFailure) return Result.fail('Invalid key');
 
-    const list = deviceKeys
-      .filter(key => !oldDevices.exists(key))
+    const list = deviceKeysError
+      .filter(key => !oldDevices.exists(key.getValue().value))
       .map(
         key => Device.create({
-          key: DeviceKey.create({value: key}).getValue(),
+          key: key.getValue(),
           datasourceId: datasource.datasourceId,
         }).getValue(),
       );

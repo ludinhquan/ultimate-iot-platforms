@@ -1,7 +1,7 @@
 import {ModuleMetadata} from "@nestjs/common";
 import {Options} from "amqplib";
 import {KafkaConfig} from 'kafkajs';
-import {IntegrationEvent} from '../events';
+import {IntegrationEvent} from "../abstracts";
 
 export enum EventBusEnum {
   Kafka = 'KAFKA',

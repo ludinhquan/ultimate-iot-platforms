@@ -44,7 +44,7 @@ export class RabbitMQEventBus implements IEventBus {
       );
       try {
         const result = await handler.handle(eventData, jsonData)
-        if (result.isOk()) this.channel.ack(msg)
+        if (result.isSuccess) this.channel.ack(msg)
       } catch (e: any) {
         console.log(e.message)
       }
@@ -67,7 +67,7 @@ export class RabbitMQEventBus implements IEventBus {
     const exchange = event.constructor.name
     const basicOptions: Options.Publish = {deliveryMode: 2, mandatory: true}
     console.log(`Publishing event ${exchange} to RabbitMQ with event id ${event.getAggregateId()}`);
-    this.channel.publish(exchange, '', Buffer.from(event.toString()), basicOptions)
+    this.channel.publish(exchange, '', Buffer.from(JSON.stringify(event)), basicOptions)
   }
 
   public async subscribe(event: ClassType<IntegrationEvent>, handler: IEventHandler, options?: SubscribeOptions) {

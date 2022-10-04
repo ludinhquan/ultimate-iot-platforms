@@ -1,16 +1,21 @@
-import {Entity, UniqueEntityID} from "@iot-platforms/core";
-import {SystemDeviceKey} from "./systemDeviceKey";
+import {Result, WatchedList} from "@iot-platforms/core";
+import {SystemDevice} from "./systemDevice";
 
-type SystemDeviceProps = {
-  key: SystemDeviceKey,
-  name: string,
-  unit: string
-}
-
-export class SystemDevice extends Entity<SystemDeviceProps>{
-  private constructor(props: SystemDeviceProps, id?: UniqueEntityID){
-    super(props, id)
+export class SystemDevices extends WatchedList<SystemDevice>{
+  private constructor (initialDevices: SystemDevice[]) {
+    super(initialDevices)
+  }
+  
+  getUniqueField(item: SystemDevice): string {
+    return item.key.value
   }
 
-  static create(){}
+  compareItems(a: SystemDevice, b: SystemDevice): boolean {
+    return a.equals(b)
+  }
+
+  static create(list?: SystemDevice[]): Result<SystemDevices> {
+    const devices = new SystemDevices(list ?? []);
+    return Result.ok(devices)
+  }
 }

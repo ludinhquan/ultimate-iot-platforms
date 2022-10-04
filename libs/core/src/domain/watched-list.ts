@@ -38,4 +38,8 @@ export abstract class WatchedList<T> {
   public exists(field: Field): boolean {
     return this.items.has(field)
   }
+
+  public get(field: Field): T | undefined {
+    return this.items.get(field)
+  }
 }
