@@ -6,7 +6,7 @@ import {IDeviceRepository} from "../../../interfaces";
 import {DeviceOrmEntity} from "../entities";
 import {DeviceMapper} from "../mappers/device.mapper";
 
-export class DeviceRepository implements IDeviceRepository {
+export class DeviceRepositoryImpl implements IDeviceRepository {
   logger = new Logger(this.constructor.name)
   constructor(
     private repo: MongoRepository<DeviceOrmEntity>,

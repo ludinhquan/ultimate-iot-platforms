@@ -5,7 +5,7 @@ import {ISystemDeviceRepository} from "../../../interfaces";
 import {SystemDeviceOrmEntity} from "../entities";
 import {SystemDeviceMapper} from "../mappers";
 
-export class SystemDeviceRepository implements ISystemDeviceRepository {
+export class SystemDeviceRepositoryImpl implements ISystemDeviceRepository {
   logger = new Logger(this.constructor.name)
 
   constructor(

@@ -10,7 +10,7 @@ import {TypeormHelperService} from "./typeorm.helper";
 @Module({
   imports: [ConfigModule],
   providers: [MultiTenantService, TypeormHelperService],
-  exports: [MultiTenantService, TypeormHelperService]
+  exports: [TypeormHelperService]
 })
 export class MongoCoreModule implements OnApplicationShutdown {
 
