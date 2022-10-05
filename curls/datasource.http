@@ -1,8 +1,7 @@
 ### fake push data
-
 POST localhost:4000
 content-type: application/json
-authorization: {{token}}
+authorization: {{TOKEN}}
 
 {
     "stationId": "632156245e2111001f1993a2",
@@ -15,21 +14,20 @@ authorization: {{token}}
 }
 
 
-### create data sources
-
+### create datasources
 POST localhost:4000/datasources
 content-type: application/json
-authorization: {{token}}
+authorization: {{TOKEN}}
 
 {
     "datasourceKey": "DL 01",
     "devices": ["Dust", "COD", "TSS"]
 }
 
-### update device for datasource data sources
+### update device for datasources
 POST localhost:4000/datasources/add-devices
 content-type: application/json
-authorization: {{token}}
+authorization: {{TOKEN}}
 
 {
     "datasourceKey": "DL 01",
