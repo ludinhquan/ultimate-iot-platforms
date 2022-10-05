@@ -4,8 +4,7 @@ import {Module} from "@nestjs/common";
 import {DataAccessModule} from "./data-access";
 import {DatasourceService} from "./domain";
 import {RawDataReceivedEventHandler} from "./event-handlers";
-import {PushDataController} from "./useCases/data/pushData/pushDataController";
-import {CreateDatasourceController, DatasourceAddNewDevicesController} from "./useCases/datasource";
+import {CreateDatasourceController, DatasourceAddNewDevicesController, PushDataController} from "./useCases";
 
 const datasourceControllers = [
   CreateDatasourceController,
