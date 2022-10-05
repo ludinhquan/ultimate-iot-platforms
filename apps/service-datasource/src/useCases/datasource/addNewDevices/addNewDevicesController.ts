@@ -1,8 +1,8 @@
 import {SERVICE_DATASOURCE} from "@iot-platforms/common/config/serviceDatasourceRoutes";
 import {ErrorsInterceptor} from "@iot-platforms/common/interceptors/error.interceptor";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
-import {RepositoryManager} from "@iot-platforms/data-access/repo-manager.service";
 import {Body, Controller, Post, UseGuards, UseInterceptors} from "@nestjs/common";
+import {RepositoryManager} from "apps/service-datasource/src/data-access/implementations/mongo/repo-manager.service";
 import {DatasourceService} from "apps/service-datasource/src/domain";
 import {AddNewDevicesUseCase} from "./addNewDevices";
 import {AddNewDevicesDTO} from "./addNewDevicesDTO";
@@ -13,7 +13,7 @@ import {AddNewDevicesDTO} from "./addNewDevicesDTO";
 export class DatasourceAddNewDevicesController {
   constructor(
     private repoManager: RepositoryManager,
-    private datasourceService: DatasourceService
+    private datasourceService: DatasourceService,
   ){}
 
   @Post('/add-devices')

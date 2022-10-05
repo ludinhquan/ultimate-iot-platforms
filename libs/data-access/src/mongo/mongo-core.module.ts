@@ -4,10 +4,13 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
 import * as path from "path";
 import {DataSource} from "typeorm";
 import {MongoConnectionOptions} from "typeorm/driver/mongodb/MongoConnectionOptions";
-import {MongoMultiTenantService} from "./mongo-multitenant.service";
+import {MultiTenantService} from "./multitenant.service";
+import {TypeormHelperService} from "./typeorm.helper";
 
 @Module({
-  imports: [ConfigModule]
+  imports: [ConfigModule],
+  providers: [MultiTenantService, TypeormHelperService],
+  exports: [MultiTenantService, TypeormHelperService]
 })
 export class MongoCoreModule implements OnApplicationShutdown {
 
@@ -27,7 +30,7 @@ export class MongoCoreModule implements OnApplicationShutdown {
           database: configService.getOrThrow('MONGODB_ADMIN_DATABASE'),
           password: configService.getOrThrow('MONGODB_ADMIN_PASS'),
           entities: [
-            path.join(__dirname, '/admin-entities/*.orm-entity.js')
+            path.join(__dirname, '/entities/*.orm-entity.js')
           ]
         }
         const datasource = new DataSource(options);
@@ -39,8 +42,8 @@ export class MongoCoreModule implements OnApplicationShutdown {
 
     return {
       module: MongoCoreModule,
-      providers: [adminClientProvider, MongoMultiTenantService],
-      exports: [MongoMultiTenantService]
+      providers: [adminClientProvider, MultiTenantService],
+      exports: [MultiTenantService]
     }
   }
 

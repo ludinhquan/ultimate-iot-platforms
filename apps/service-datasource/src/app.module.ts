@@ -1,11 +1,11 @@
 import {ServiceRegistryModule} from "@iot-platforms/core";
-import {DataAccessModule} from "@iot-platforms/data-access";
 import {EventBusModule} from "@iot-platforms/event-bus";
 import {Module} from "@nestjs/common";
+import {DataAccessModule} from "./data-access";
 import {DatasourceService} from "./domain";
 import {RawDataReceivedEventHandler} from "./event-handlers";
 import {PushDataController} from "./useCases/data/pushData/pushDataController";
-import {DatasourceAddNewDevicesController, CreateDatasourceController} from "./useCases/datasource";
+import {CreateDatasourceController, DatasourceAddNewDevicesController} from "./useCases/datasource";
 
 const datasourceControllers = [
   CreateDatasourceController,

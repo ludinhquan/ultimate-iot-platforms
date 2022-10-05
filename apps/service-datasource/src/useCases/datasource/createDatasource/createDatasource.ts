@@ -1,5 +1,5 @@
 import {Either, left, Result, right, UseCase} from "@iot-platforms/core";
-import {IDataSourceRepository} from "@iot-platforms/data-access";
+import {IDataSourceRepository} from "apps/service-datasource/src/data-access/interfaces";
 import {Datasource, DatasourceKey, Device, DeviceKey, Devices} from "../../../domain";
 import {CreateDatasourceDTO} from "./createDatasourceDTO";
 import {CreateDatasourceErrors} from "./createDatasourceErrors";
@@ -11,10 +11,7 @@ type CreateDatasourceResponse = Either<
 >
 
 export class CreateDatasourceUseCase implements UseCase<CreateDatasourceDTO, Promise<CreateDatasourceResponse>>{
-  private datasourceRepo: IDataSourceRepository
-  constructor(datasourceRepo: IDataSourceRepository) {
-    this.datasourceRepo = datasourceRepo
-  }
+  constructor(private datasourceRepo: IDataSourceRepository) {}
 
   async getDevicesFromDTO(datasource: Datasource, deviceKeys: string[]){
     const deviceKeysError = deviceKeys

@@ -1,13 +1,12 @@
-import {DATABASE_ADMIN} from "@iot-platforms/data-access/constants/shared.constants";
 import {Inject, Injectable, Logger, OnApplicationShutdown} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {ObjectId} from "mongodb";
-import * as path from "path";
 import {DataSource} from "typeorm";
-import {OrganizationOrmEntity} from "./admin-entities";
+import {DATABASE_ADMIN} from "../constants";
+import {OrganizationOrmEntity} from "./entities";
 
 @Injectable()
-export class MongoMultiTenantService implements OnApplicationShutdown{
+export class MultiTenantService implements OnApplicationShutdown{
   private logger = new Logger(this.constructor.name)
   private tenantMaps: Map<string, OrganizationOrmEntity> = new Map()
   private datasourceMaps: Map<string, DataSource> = new Map()
@@ -31,9 +30,6 @@ export class MongoMultiTenantService implements OnApplicationShutdown{
       } else {
         const datasource = new DataSource({
           type: 'mongodb',
-          entities: [
-            path.join(__dirname, '/entities/*.orm-entity.js')
-          ],
           url: this.getUrl(tenant)
         })
         this.datasourceMaps.set(tenantId, datasource);

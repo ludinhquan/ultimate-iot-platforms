@@ -4,15 +4,26 @@ content-type: application/json
 authorization: {{TOKEN}}
 
 {
-    "stationId": "632156245e2111001f1993a2",
-    "receivedAt": "2022-08-31T17:00:00.000",
-    "measures": [
-      {"parameter": "COD", "statusDevice": 2, "value": 10},
-      {"parameter": "pH", "statusDevice": 2, "value": 10},
-      {"parameter": "TSS", "statusDevice": 2, "value": 10}
-    ]
+  "stationId": "632156245e2111001f1993a2",
+  "receivedAt": "2022-08-31T17:00:00.000",
+  "measures": [
+    {
+      "parameter": "Dust",
+      "statusDevice": 2,
+      "value": 10
+    },
+    {
+      "parameter": "pH",
+      "statusDevice": 2,
+      "value": 10
+    },
+    {
+      "parameter": "TSS",
+      "statusDevice": 2,
+      "value": 10
+    }
+  ]
 }
-
 
 ### create datasources
 POST {{HOST_DEV}}/datasources

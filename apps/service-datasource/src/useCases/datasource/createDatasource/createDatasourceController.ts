@@ -1,8 +1,7 @@
-import {SERVICE_DATASOURCE} from "@iot-platforms/common/config/serviceDatasourceRoutes";
-import {ErrorsInterceptor} from "@iot-platforms/common/interceptors/error.interceptor";
+import {ErrorsInterceptor, SERVICE_DATASOURCE} from "@iot-platforms/common";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
-import {RepositoryManager} from "@iot-platforms/data-access/repo-manager.service";
 import {Body, Controller, Post, UseGuards, UseInterceptors} from "@nestjs/common";
+import {RepositoryManager} from "apps/service-datasource/src/data-access";
 import {CreateDatasourceUseCase} from "./createDatasource";
 import {CreateDatasourceDTO} from "./createDatasourceDTO";
 

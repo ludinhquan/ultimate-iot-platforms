@@ -1,8 +1,8 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
-import {IDeviceRepository} from "@iot-platforms/data-access/interfaces/device-repository.interface";
 import {Logger} from "@nestjs/common";
 import {Device, Devices} from "apps/service-datasource/src/domain";
 import {MongoRepository} from "typeorm";
+import {IDeviceRepository} from "../../../interfaces";
 import {DeviceOrmEntity} from "../entities";
 import {DeviceMapper} from "../mappers/device.mapper";
 

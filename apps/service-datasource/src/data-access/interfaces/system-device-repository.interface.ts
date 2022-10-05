@@ -1,6 +1,6 @@
+import {IRepository} from "@iot-platforms/data-access";
 import {SystemDevices} from "apps/service-datasource/src/domain";
-import {IRepo} from "./base-repository.interface";
 
-export interface ISystemDeviceRepository extends IRepo{
+export interface ISystemDeviceRepository extends IRepository{
   findSystemDevicesByKeys(keys: string[]): Promise<SystemDevices>
 }

@@ -1,7 +1,7 @@
-import {ISystemDeviceRepository} from "@iot-platforms/data-access/interfaces";
 import {Logger} from "@nestjs/common";
 import {SystemDevices} from "apps/service-datasource/src/domain";
 import {MongoRepository} from "typeorm";
+import {ISystemDeviceRepository} from "../../../interfaces";
 import {SystemDeviceOrmEntity} from "../entities";
 import {SystemDeviceMapper} from "../mappers";
 

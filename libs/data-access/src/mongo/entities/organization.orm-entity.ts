@@ -1,4 +1,3 @@
-import {ObjectId} from "mongodb";
 import {Column, Entity, ObjectIdColumn} from "typeorm";
 interface DatabaseInfo {
   name: string,

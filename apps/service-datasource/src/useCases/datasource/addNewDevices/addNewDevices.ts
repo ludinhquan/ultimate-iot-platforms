@@ -1,5 +1,5 @@
 import {Either, left, Result, right, UseCase} from "@iot-platforms/core";
-import {IDataSourceRepository, ISystemDeviceRepository} from "@iot-platforms/data-access";
+import {IDataSourceRepository, ISystemDeviceRepository} from "apps/service-datasource/src/data-access/interfaces";
 import {Datasource, DatasourceKey, DatasourceService, Device, DeviceKey, Devices} from "apps/service-datasource/src/domain";
 import {AddNewDevicesDTO} from "./addNewDevicesDTO";
 import {AddNewDevicesErrors} from "./addNewDevicesErrors";

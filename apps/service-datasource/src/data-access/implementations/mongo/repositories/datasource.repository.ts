@@ -1,12 +1,11 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
-import {IDataSourceRepository} from "@iot-platforms/data-access/interfaces";
-import {IDeviceRepository} from "@iot-platforms/data-access/interfaces/device-repository.interface";
 import {Datasource, DatasourceId, DatasourceKey, Devices} from "apps/service-datasource/src/domain";
 import {MongoRepository} from "typeorm";
+import {IDataSourceRepository, IDeviceRepository} from "../../../interfaces";
 import {DatasourceOrmEntity} from "../entities";
 import {DatasourceMapper} from "../mappers";
 
-export class DataSourceRepository implements IDataSourceRepository {
+export class DataSourceRepositoryImpl implements IDataSourceRepository {
   constructor(
     private repo: MongoRepository<DatasourceOrmEntity>,
     private deviceRepo: IDeviceRepository

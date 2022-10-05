@@ -1,47 +1,47 @@
+import {IRepository, MultiTenantService, TypeormHelperService} from "@iot-platforms/data-access";
 import {Injectable} from "@nestjs/common";
-import {EntityTarget, MongoRepository, ObjectLiteral} from "typeorm";
-import {MongoMultiTenantService} from "./databases";
-import {DatasourceOrmEntity, DeviceOrmEntity, SystemDeviceOrmEntity} from "./databases/mongo/entities";
-import {DeviceRepository, SystemDeviceRepository} from "./databases/mongo/repositories";
-import {DataSourceRepository} from "./databases/mongo/repositories/datasource.repository";
-import {IRepo, IRepositoryManager} from "./interfaces";
+import {EntitySchema, EntityTarget, MongoRepository, ObjectLiteral} from "typeorm";
+import {DatasourceOrmEntity, DeviceOrmEntity, SystemDeviceOrmEntity} from "./entities";
+import {DataSourceRepositoryImpl, DeviceRepository, SystemDeviceRepository} from "./repositories";
 
 @Injectable()
-export class RepositoryManager implements IRepositoryManager {
-  repoMaps: Map<string, IRepo> = new Map()
+export class RepositoryManager {
+  repoMaps: Map<string, IRepository> = new Map()
 
   constructor(
-    private mongoMultiTenantService: MongoMultiTenantService,
-  ){ }
+    private multiTenantService: MultiTenantService,
+    private typeormHelper: TypeormHelperService,
+  ) {}
 
-  private getRepoToken(tenantId: string, repo: ClassType<IRepo>){
+  private getRepoToken(tenantId: string, repo: ClassType<IRepository>){
     return [tenantId, repo.name].join('_')
   }
 
   private async getRepository<Entity extends ObjectLiteral>(tenantId: string, entity: EntityTarget<Entity>): Promise<MongoRepository<Entity>>{
-    const datasource = await this.mongoMultiTenantService.getDatasource(tenantId);
+    const datasource = await this.multiTenantService.getDatasource(tenantId);
     return new Promise(res => {
-      const timeInterval = setInterval(() => {
-        if(!datasource.hasMetadata(entity)) return
+      const timeInterval = setInterval(async () => {
+        if(datasource.hasMetadata(entity)) res(datasource.getMongoRepository(entity))
+        await this.typeormHelper.addEntities(datasource, [entity as unknown as EntitySchema])
         res(datasource.getMongoRepository(entity));
         clearInterval(timeInterval);
       })
     })
   }
 
-  async datasourceRepo(tenantId: string): Promise<DataSourceRepository> {
-    const token = this.getRepoToken(tenantId, DataSourceRepository);
+  async datasourceRepo(tenantId: string): Promise<DataSourceRepositoryImpl> {
+    const token = this.getRepoToken(tenantId, DataSourceRepositoryImpl);
     if (!this.repoMaps.has(token)) {
       const datasourceMongoRepo = await this.getRepository(tenantId, DatasourceOrmEntity)
       const deviceRepo = await this.deviceRepo(tenantId);
-      const repo = new DataSourceRepository(datasourceMongoRepo, deviceRepo)
+      const repo = new DataSourceRepositoryImpl(datasourceMongoRepo, deviceRepo)
       this.repoMaps.set(token, repo)
     }
-    return this.repoMaps.get(token) as DataSourceRepository
+    return this.repoMaps.get(token) as DataSourceRepositoryImpl
   }
 
   async deviceRepo(tenantId: string): Promise<DeviceRepository> {
-    const token = this.getRepoToken(tenantId, DataSourceRepository);
+    const token = this.getRepoToken(tenantId, DataSourceRepositoryImpl);
     if (!this.repoMaps.has(token)) {
       const deviceRepo = await this.getRepository(tenantId, DeviceOrmEntity);
       const repo = new DeviceRepository(deviceRepo)

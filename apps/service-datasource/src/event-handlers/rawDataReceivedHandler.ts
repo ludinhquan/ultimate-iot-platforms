@@ -1,15 +1,20 @@
 import {Result} from "@iot-platforms/core";
-import {RepositoryManager} from "@iot-platforms/data-access/repo-manager.service";
 import {EventBusHandler, IEventHandler, RawDataReceivedEvent} from "@iot-platforms/event-bus";
+import {DatasourceService} from "../domain";
 
 @EventBusHandler({event: RawDataReceivedEvent})
 export class RawDataReceivedEventHandler implements IEventHandler<RawDataReceivedEvent>{
   constructor(
-    private repoManager: RepositoryManager,
-  ){}
+    private datasourceService: DatasourceService,
+  ) {}
 
   async handle(event: RawDataReceivedEvent) {
-    const datasourceRepo = await this.repoManager.datasourceRepo(event.getOrganizationId());
-    return Result.ok()
+    // const tentantId = event.getOrganizationId()
+    // const [datasourceRepo, systemDeviceRepo] = await Promise.all([
+    //   this.repoManager.datasourceRepo(tentantId),
+    //   this.repoManager.systemDeviceRepo(tentantId)
+    // ]);
+
+    return Result.ok();
   }
 }

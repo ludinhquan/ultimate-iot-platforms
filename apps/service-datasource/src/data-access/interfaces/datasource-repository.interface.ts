@@ -1,7 +1,9 @@
+import {IRepository} from "@iot-platforms/data-access";
 import {Datasource, DatasourceId, DatasourceKey, Devices} from "apps/service-datasource/src/domain";
-import {IRepo} from "./base-repository.interface";
 
-export interface IDataSourceRepository extends IRepo{
+export const DataSourceRepository = Symbol('IDataSourceRepository');
+
+export interface IDataSourceRepository extends IRepository {
   exists(datasourceId: DatasourceId): Promise<boolean>,
   existByKey(datasourceKey: DatasourceKey): Promise<boolean>,
   save(datasource: Datasource): Promise<void>,
