@@ -1,5 +1,5 @@
 ### fake push data
-POST localhost:4000
+POST {{HOST_DEV}}
 content-type: application/json
 authorization: {{TOKEN}}
 
@@ -15,7 +15,7 @@ authorization: {{TOKEN}}
 
 
 ### create datasources
-POST localhost:4000/datasources
+POST {{HOST_DEV}}/datasources
 content-type: application/json
 authorization: {{TOKEN}}
 
@@ -25,7 +25,7 @@ authorization: {{TOKEN}}
 }
 
 ### update device for datasources
-POST localhost:4000/datasources/add-devices
+POST {{HOST_DEV}}/datasources/add-devices
 content-type: application/json
 authorization: {{TOKEN}}
 
