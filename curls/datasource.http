@@ -1,10 +1,12 @@
+### fake push data
+
 POST localhost:4000
 content-type: application/json
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDJmMmEyODdjNGYxMDAwMWJjZjNkMzEiLCJmaXJzdE5hbWUiOiJRdcOibiIsImxhc3ROYW1lIjoiTOG7ryDEkMOsbmggUXXDom4iLCJpc0FkbWluIjp0cnVlLCJpc0FjdGl2ZSI6dHJ1ZSwiaXNPd25lciI6dHJ1ZSwib3JnYW5pemF0aW9uIjp7Il9pZCI6IjVlZWY4MDExOWQ0ZjQ1MDAxMWMzMGQ1OSIsIm5hbWUiOiJpTG90dXNMYW5kIFZpZXQgTmFtIEpTQy4ifSwiaWF0IjoxNjYxNTk3MjQzfQ.aBv-IScFCG5Usgr6XOfz43LMW9iikjiZlSeGOBwbvik
+authorization: {{token}}
 
 {
-    "stationId": "",
-    "receivedAt": "2022-09-09T06:51:00.000Z", 
+    "stationId": "632156245e2111001f1993a2",
+    "receivedAt": "2022-08-31T17:00:00.000",
     "measures": [
       {"parameter": "COD", "statusDevice": 2, "value": 10},
       {"parameter": "pH", "statusDevice": 2, "value": 10},
@@ -12,18 +14,22 @@ authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDJmMmEyODdjNGYx
     ]
 }
 
+
+### create data sources
+
 POST localhost:4000/datasources
 content-type: application/json
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDJmMmEyODdjNGYxMDAwMWJjZjNkMzEiLCJmaXJzdE5hbWUiOiJRdcOibiIsImxhc3ROYW1lIjoiTOG7ryDEkMOsbmggUXXDom4iLCJpc0FkbWluIjp0cnVlLCJpc0FjdGl2ZSI6dHJ1ZSwiaXNPd25lciI6dHJ1ZSwib3JnYW5pemF0aW9uIjp7Il9pZCI6IjVlZWY4MDExOWQ0ZjQ1MDAxMWMzMGQ1OSIsIm5hbWUiOiJpTG90dXNMYW5kIFZpZXQgTmFtIEpTQy4ifSwiaWF0IjoxNjYxNTk3MjQzfQ.aBv-IScFCG5Usgr6XOfz43LMW9iikjiZlSeGOBwbvik
+authorization: {{token}}
 
 {
     "datasourceKey": "DL 01",
     "devices": ["Dust", "COD", "TSS"]
 }
 
+### update device for datasource data sources
 POST localhost:4000/datasources/add-devices
 content-type: application/json
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDJmMmEyODdjNGYxMDAwMWJjZjNkMzEiLCJmaXJzdE5hbWUiOiJRdcOibiIsImxhc3ROYW1lIjoiTOG7ryDEkMOsbmggUXXDom4iLCJpc0FkbWluIjp0cnVlLCJpc0FjdGl2ZSI6dHJ1ZSwiaXNPd25lciI6dHJ1ZSwib3JnYW5pemF0aW9uIjp7Il9pZCI6IjVlZWY4MDExOWQ0ZjQ1MDAxMWMzMGQ1OSIsIm5hbWUiOiJpTG90dXNMYW5kIFZpZXQgTmFtIEpTQy4ifSwiaWF0IjoxNjYxNTk3MjQzfQ.aBv-IScFCG5Usgr6XOfz43LMW9iikjiZlSeGOBwbvik
+authorization: {{token}}
 
 {
     "datasourceKey": "DL 01",
