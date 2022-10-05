@@ -1,4 +1,5 @@
 export * from './config'
 export * from './interceptors'
+export * from './logger'
 export * from './setup'
 export * from './utils'

@@ -53,8 +53,8 @@ export class AddNewDevicesUseCase implements UseCase<AddNewDevicesDTO, Promise<A
       return left(new AddNewDevicesErrors.DeviceKeyIsInvalid(devicesOrError.getError()))
 
     const devices = devicesOrError.getValue();
-    const systemDevices = await this.systemDeviceRepo.findSystemDevicesByKeys(data.devices)
 
+    const systemDevices = await this.systemDeviceRepo.findSystemDevicesByKeys(data.devices)
     this.datasourceService.mappingSystemKey(devices, systemDevices)
 
     datasource.updateDevices(devices);

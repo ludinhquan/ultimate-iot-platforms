@@ -1,10 +1,24 @@
-### fake push data
-POST {{HOST_DEV}}
+### create connection
+POST {{HOST_DEV}}/connections
 content-type: application/json
 authorization: {{TOKEN}}
 
 {
-  "stationId": "632156245e2111001f1993a2",
+    "stationId": "60112a674be0bf001cebe760",
+    "items": [
+      {"deviceKey": "TSS", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "2e221068-4448-4cb8-b28e-1a497de9061f"},
+      {"deviceKey": "COD", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "2e221068-4448-4cb8-b28e-1a497de9061f"},
+      {"deviceKey": "Dust", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "91ec9dbb-7420-4ea0-a370-91dab5c948cd"}
+    ]
+}
+
+### fake push data
+POST {{HOST_DEV}}/push-data
+content-type: application/json
+authorization: {{TOKEN}}
+
+{
+  "stationId": "DL01_AE3745",
   "receivedAt": "2022-08-31T17:00:00.000",
   "measures": [
     {
@@ -18,7 +32,7 @@ authorization: {{TOKEN}}
       "value": 10
     },
     {
-      "parameter": "TSS",
+      "parameter": "COD",
       "statusDevice": 2,
       "value": 10
     }

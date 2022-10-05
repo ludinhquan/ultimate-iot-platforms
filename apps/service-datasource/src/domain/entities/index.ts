@@ -2,7 +2,6 @@ export * from './connection'
 export * from './connectionId'
 export * from './connectionItem'
 export * from './connectionItems'
-export * from './connectionItemStatus'
 
 export * from './datasource'
 export * from './datasourceId'

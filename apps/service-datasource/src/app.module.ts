@@ -3,12 +3,18 @@ import {EventBusModule} from "@iot-platforms/event-bus";
 import {Module} from "@nestjs/common";
 import {DataAccessModule} from "./data-access";
 import {DatasourceService} from "./domain";
-import {RawDataReceivedEventHandler} from "./event-handlers";
-import {CreateDatasourceController, DatasourceAddNewDevicesController, PushDataController} from "./useCases";
+import {
+  CreateConnectionController,
+  CreateDatasourceController, 
+  DatasourceAddNewDevicesController, 
+  PushDataController, 
+  RawDataReceivedEventHandler
+} from "./useCases";
 
 const datasourceControllers = [
   CreateDatasourceController,
-  DatasourceAddNewDevicesController
+  DatasourceAddNewDevicesController,
+  CreateConnectionController
 ]
 
 const fakeDataController = [

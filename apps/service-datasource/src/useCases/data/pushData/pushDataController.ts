@@ -15,7 +15,7 @@ export class PushDataController {
     @Inject(EventBusToken) private eventBus: IEventBus
   ) {}
 
-  @Post()
+  @Post('push-data')
   pushData(
     @Body() data: dataDTO,
     @CurrentOrganization() organization: IOrganization

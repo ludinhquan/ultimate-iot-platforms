@@ -1,11 +1,9 @@
 import {AggregateRoot, Guard, Result, UniqueEntityID} from "@iot-platforms/core";
 import {ConnectionItems} from "./connectionItems";
-import {DatasourceId} from "./datasourceId";
 import {StationId} from "./stationId";
 
 export interface ConnectionProps {
   stationId: StationId,
-  datasourceId: DatasourceId,
   connectionItems?: ConnectionItems
 }
 
@@ -17,7 +15,6 @@ export class Connection extends AggregateRoot<ConnectionProps> {
   static create(props: ConnectionProps, id?: UniqueEntityID): Result<Connection>{
     const guardResult = Guard.againstNullOrUndefinedBulk([
       {argument: props.stationId, argumentName: 'stationId'},
-      {argument: props.datasourceId, argumentName: 'datasourceId'},
     ])
 
     if (guardResult.isFailure) {

@@ -1,5 +1,10 @@
-export const SERVICE_DATASOURCE = 'datasources'
-
-export const SERVICE_DATASOURCE_ROUTES = {
-
+export const ServiceDatasourceRoutes = {
+  Datasource: {
+    Root: 'datasources',
+  },
+  Connection: {
+    Root: 'connections',
+    Create: '',
+    Update: ''
+  }
 }

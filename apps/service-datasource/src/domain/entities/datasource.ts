@@ -7,11 +7,13 @@ import {Devices} from "./devices";
 export interface DatasourceProps {
   key: DatasourceKey,
   type?: DatasourceType,
-  devices?: Devices
+  devices?: Devices,
+  totalDevice?: number
 }
 
 export class Datasource extends AggregateRoot<DatasourceProps> {
   static defaultType = DatasourceType.Datalogger
+  private static readonly initialTotalDevice = 0;
   
   get datasourceId(): DatasourceId {
     return DatasourceId.create(this._id).getValue()
@@ -29,12 +31,21 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
     return this.props.devices
   }
 
+  get totalDevice(){
+    return this.props.totalDevice
+  }
+  
+
   private constructor(props: DatasourceProps, id?: UniqueEntityID){
     super(props, id)
   }
 
   public updateDevices(devices: Devices){
     this.props.devices = devices
+  }
+
+  public updateTotalDevice(total: number){
+    this.props.totalDevice = total
   }
 
   static create(props: DatasourceProps, id?: UniqueEntityID): Result<Datasource>{
@@ -49,6 +60,7 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
 
     const defaultValues: DatasourceProps = {
       ...props,
+      totalDevice: props.totalDevice ?? this.initialTotalDevice,
       type: props.type ? props.type : Datasource.defaultType
     }
 

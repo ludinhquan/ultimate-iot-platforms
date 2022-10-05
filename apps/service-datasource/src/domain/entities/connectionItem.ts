@@ -1,9 +1,11 @@
+import {ConnectionItemStatus} from "@iot-platforms/contracts";
 import {Entity, Guard, Result, UniqueEntityID} from "@iot-platforms/core";
-import {ConnectionItemStatus} from "./connectionItemStatus";
+import {DatasourceId} from "./datasourceId";
 import {DeviceKey} from "./deviceKey";
 import {SystemDeviceKey} from "./systemDeviceKey";
 
 export interface ConnectionItemProps {
+  datasourceId: DatasourceId,
   deviceKey: DeviceKey,
   systemKey?: SystemDeviceKey,
   status?: ConnectionItemStatus
@@ -40,6 +42,7 @@ export class ConnectionItem extends Entity<ConnectionItemProps> {
 
   static create(props: ConnectionItemProps, id?: UniqueEntityID){
     const guardResult = Guard.againstNullOrUndefinedBulk([
+      {argument: props.datasourceId, argumentName: 'datasourceId'},
       {argument: props.deviceKey, argumentName: 'deviceKey'},
     ]);
 
