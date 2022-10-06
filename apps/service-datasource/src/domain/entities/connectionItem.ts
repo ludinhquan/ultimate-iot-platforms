@@ -15,6 +15,10 @@ export interface ConnectionItemProps {
 export class ConnectionItem extends Entity<ConnectionItemProps> {
   static defaultRatio = 1
 
+  get datasourceId(){
+    return this.props.datasourceId
+  }
+
   get deviceKey(){
     return this.props.deviceKey
   }
@@ -40,7 +44,7 @@ export class ConnectionItem extends Entity<ConnectionItemProps> {
     return props.status
   }
 
-  static create(props: ConnectionItemProps, id?: UniqueEntityID){
+  static create(props: ConnectionItemProps, id?: UniqueEntityID): Result<ConnectionItem>{
     const guardResult = Guard.againstNullOrUndefinedBulk([
       {argument: props.datasourceId, argumentName: 'datasourceId'},
       {argument: props.deviceKey, argumentName: 'deviceKey'},

@@ -1,3 +1,4 @@
+import {isEmpty} from "@iot-platforms/common";
 import {Result} from "./result";
 
 export type GuardResponse = string;
@@ -53,6 +54,11 @@ export class Guard {
     }
 
     return Result.ok<GuardResponse>();
+  }
+
+  public static againstEmpty(params: any, argumentName: string){
+    if(isEmpty(params)) return Result.fail(`${argumentName} is not allowed empty`)
+    return Result.ok()
   }
 
   public static isOneOf (value: any, validValues: any[], argumentName: string) : Result<GuardResponse> {

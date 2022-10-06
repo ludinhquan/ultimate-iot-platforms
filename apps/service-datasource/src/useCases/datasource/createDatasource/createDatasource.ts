@@ -51,7 +51,7 @@ export class CreateDatasourceUseCase implements UseCase<CreateDatasourceDTO, Pro
     const datasource = datasourceOrError.getValue()
 
     const devices = await this.getDevicesFromDTO(datasource, data.devices)
-    if(devices.isFailure) return left(new CreateDatasourceErrors.DeviceKeyIsInvalid(devices.getError()))
+    // if(devices.isFailure) return left(new CreateDatasourceErrors.DeviceKeyIsInvalid(devices.getError()))
 
     datasource.updateDevices(devices.getValue());
     await this.datasourceRepo.save(datasource)

@@ -37,15 +37,15 @@ export class Result<T> {
     return this.value;
   }
 
-  public getError<R extends T | string>(): R {
-    return this.error as R;
+  public getError(): T {
+    return this.error as T;
   }
 
   public static ok<U> (value?: U) : Result<U> {
     return new Result<U>(true, null, value);
   }
 
-  public static fail<U> (error: string): Result<U> {
+  public static fail<U> (error: string|any): Result<U> {
     return new Result<U>(false, error);
   }
 

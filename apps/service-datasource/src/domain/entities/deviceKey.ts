@@ -19,7 +19,6 @@ export class DeviceKey extends ValueObject<DeviceKeyProps> {
 
     if (nullGuardResult.isFailure) return Result.fail(nullGuardResult.getError());
 
-
     return Result.ok<DeviceKey>(new DeviceKey(props));
   }
 }

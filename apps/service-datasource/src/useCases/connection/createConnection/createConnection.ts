@@ -1,53 +1,120 @@
-import {Logger} from "@iot-platforms/common";
 import {Either, left, Result, right, UniqueEntityID, UseCase} from "@iot-platforms/core";
 import {IDataSourceRepository} from "apps/service-datasource/src/data-access";
-import {DatasourceId, DeviceKey} from "apps/service-datasource/src/domain";
+import {ConnectionItem, ConnectionItems, Datasource, DatasourceId, DeviceKey, SystemDeviceKey} from "apps/service-datasource/src/domain";
 import {CreateConnectionDTO} from "./createConnectionDTO";
 import {CreateConnectionErrors} from "./createConnectionErrors";
 
 type CreateConnectionResponse = Either<
   CreateConnectionErrors.DeviceKeyIsInvalid |
+  CreateConnectionErrors.DatasourcesNotFound |
   Result<any>,
   Result<any>
 >
 
-export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, CreateConnectionResponse> {
-  private logger = new Logger(this.constructor.name)
+type ValidateDatasourceResult = Either<
+  CreateConnectionErrors.DatasourcesNotFound,
+  Result<Datasource[]>
+>
 
+type ValidateItemsResult = Either<
+  CreateConnectionErrors.DatasourcesNotFound |
+  CreateConnectionErrors.DeviceDontMatchDatasource |
+  Result<any>,
+  Result<ConnectionItems>
+>
+
+export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, CreateConnectionResponse> {
   constructor(
     private datasourceRepo: IDataSourceRepository
   ) {}
 
   async execute(dto: CreateConnectionDTO): Promise<CreateConnectionResponse> {
-    const listKeys = dto.items.map(item => item.deviceKey);
-    const deviceKeyOrError = Result.combine(listKeys.map(key => DeviceKey.create({value: key})));
-
-    if (deviceKeyOrError.isFailure) return left(deviceKeyOrError)
-
-    const devices = this.getDevices(dto)
-
-    return right(Result.ok())
-  }
-
-  async getDevices(dto: CreateConnectionDTO) {
-    type GroupDevice = Record<string, CreateConnectionDTO['items']>
-
-    const groupedItemsByDatasourceId = dto.items.reduce(
-      (prev: GroupDevice, item) => ({
-        ...prev,
-        [item.datasourceId]: [...(prev[item.datasourceId] ?? []), item]
-      }),
-      {}
-    )
-
-    const datasourceIds = Object.keys(groupedItemsByDatasourceId)
+    const datasourceIds = dto.datasourceIds
       .map(id => DatasourceId.create(new UniqueEntityID(id)).getValue());
 
-    const deviceGroups = await Promise.all(
-      datasourceIds.map(datasourceId => this.datasourceRepo.getDevicesByDatasourceId(datasourceId))
+    const datasourceResults = await this.validateDatasources(datasourceIds);
+
+    if (datasourceResults.isLeft()) return datasourceResults
+
+    const datasources = datasourceResults.value.getValue()
+
+    const itemResults = this.validateItems(dto, datasources)
+
+    if (itemResults.isLeft()) return itemResults
+
+    const connectionItems = (itemResults as ValidateItemsResult).value.getValue();
+
+    return right(Result.ok(connectionItems))
+  }
+
+  validateItems(dto: CreateConnectionDTO, datasources: Datasource[]): ValidateItemsResult {
+    const datasourceMap = new Map(datasources.map(datasource => [datasource.datasourceId.value, datasource]));
+
+    const connectionItemResults = dto.items.map(item => {
+      const deviceKeyOrError = DeviceKey.create({value: item.deviceKey})
+      if (deviceKeyOrError.isFailure) return left(deviceKeyOrError)
+
+      let systemKeyOrError: Result<SystemDeviceKey> | null = null
+      if (item.systemKey) {
+        systemKeyOrError = SystemDeviceKey.create({value: item.systemKey})
+        if (systemKeyOrError.isFailure) return left(systemKeyOrError)
+      }
+
+      if (!datasourceMap.has(item.datasourceId))
+        return left(new CreateConnectionErrors.DatasourcesNotFound(item.datasourceId));
+
+      const datasource = datasourceMap.get(item.datasourceId);
+      if (!datasource.devices.exists(item.deviceKey))
+        return left(new CreateConnectionErrors.DeviceDontMatchDatasource(item.deviceKey, datasource.key.value));
+
+      const connectionItem = ConnectionItem.create({
+        deviceKey: deviceKeyOrError.getValue(),
+        systemKey: systemKeyOrError ? systemKeyOrError.getValue() : null,
+        datasourceId: datasource.datasourceId,
+        ratio: item.ratio,
+        status: item.status
+      })
+
+      if(connectionItem.isFailure) return left(connectionItem.getError())
+
+      return right(connectionItem.getValue())
+    })
+
+    const error = connectionItemResults.find(result => result.isLeft());
+    if(error) return error as ValidateItemsResult
+
+    const items = connectionItemResults.map(item => item.value as ConnectionItem);
+    const connectionItems = ConnectionItems.create(items);
+
+    if(connectionItems.isFailure) return left(connectionItems);
+
+    return right(connectionItems)
+  }
+
+  async validateDatasources(datasourceIds: DatasourceId[]): Promise<ValidateDatasourceResult> {
+    const datasources = await this.datasourceRepo.findByIds(datasourceIds);
+
+    const datasourceMap: Map<string, Datasource> = new Map(
+      datasources.map(datasource => [datasource.datasourceId.value, datasource])
     )
 
-    console.log(deviceGroups)
-    // return groupDeviceKeysByDatasource
+    const idsNotFound = datasourceIds
+      .filter(id => !datasourceMap.has(id.value))
+      .map(id => id.value);
+
+    if (idsNotFound.length > 0) return left(new CreateConnectionErrors.DatasourcesNotFound(idsNotFound.join()))
+
+    await this.mapDatasourceDevices(datasources);
+
+    return right(Result.ok(datasources))
+  }
+
+  async mapDatasourceDevices(datasources: Datasource[]) {
+    const promises = datasources.map(async datasource => {
+      const devices = await this.datasourceRepo.getDevicesByDatasourceId(datasource.datasourceId);
+      datasource.updateDevices(devices)
+    })
+
+    await Promise.all(promises)
   }
 }

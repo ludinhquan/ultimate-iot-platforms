@@ -53,6 +53,12 @@ export class DataSourceRepositoryImpl implements IDataSourceRepository {
     return ormEntities.map(DatasourceMapper.toDomain)
   }
 
+  async findByIds(datasourceIds: DatasourceId[]): Promise<Datasource[]> {
+    const ids = datasourceIds.map(datasourceId => datasourceId.value);
+    const ormEntities = await this.repo.findBy({_id: {$in: ids}});
+    return ormEntities.map(DatasourceMapper.toDomain);
+  }
+
   async findByKey(datasourceKey: DatasourceKey): Promise<Datasource | null> {
     const ormEntity = await this.repo.findOneBy({key: datasourceKey.value})
     return ormEntity ? DatasourceMapper.toDomain(ormEntity) : null

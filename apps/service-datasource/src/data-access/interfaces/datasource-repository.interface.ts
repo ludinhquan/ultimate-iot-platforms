@@ -8,6 +8,7 @@ export interface IDataSourceRepository extends IRepository {
   existByKey(datasourceKey: DatasourceKey): Promise<boolean>,
   save(datasource: Datasource): Promise<void>,
   find(): Promise<Datasource[]>
+  findByIds(datasourceIds: DatasourceId[]): Promise<Datasource[]>
   findByKey(datasourceKey: DatasourceKey): Promise<Datasource|null>
   getDevicesByDatasourceId(datasourceId: DatasourceId): Promise<Devices>
 }

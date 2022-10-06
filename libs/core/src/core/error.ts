@@ -1,14 +1,18 @@
-export enum HttpExceptionKey {
+export enum Error {
   NOT_FOUND_EXCEPTION,
   BAD_REQUEST_EXCEPTION,
 }
 
-export abstract class HttpErrors {
-  abstract code: number
-  abstract key: HttpExceptionKey
-  message: string
+export type StatusCode = number
 
-  constructor(message: string) {
+export abstract class HttpErrors {
+  message: string
+  error: string
+  status: StatusCode
+
+  constructor(message: string, statusCode?: StatusCode) {
     this.message = message
+    this.error = new.target.name
+    this.status = statusCode ?? 500
   }
 }

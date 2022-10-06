@@ -1,5 +1,5 @@
 import {ErrorsInterceptor, ServiceDatasourceRoutes} from "@iot-platforms/common";
-import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
+import {CurrentOrganization, JwtAuthGuard, Result} from "@iot-platforms/core";
 import {Body, Controller, HttpException, Post, UseGuards, UseInterceptors} from "@nestjs/common";
 import {RepositoryManager} from "apps/service-datasource/src/data-access";
 import {CreateConnectionUseCase} from "./createConnection";
@@ -20,21 +20,25 @@ export class CreateConnectionController {
     @CurrentOrganization() organization: IOrganization
   ){
     try {
-    const [datasourceRepo, systemDeviceRepo] = await Promise.all([
-      this.repoManager.datasourceRepo(organization.id),
-      this.repoManager.systemDeviceRepo(organization.id)
-    ]);
+      const [datasourceRepo, systemDeviceRepo] = await Promise.all([
+        this.repoManager.datasourceRepo(organization.id),
+        this.repoManager.systemDeviceRepo(organization.id)
+      ]);
       const useCase = new CreateConnectionUseCase(datasourceRepo)
       const result = await useCase.execute(dto)
 
-      if(result.isLeft()){
+      if (result.isLeft()) {
         const error = result.value
-        if(error instanceof CreateConnectionErrors.DeviceKeyIsInvalid)
-          throw error
-        throw new HttpException(error.getError(), 422)
+        switch (error.constructor) {
+          case CreateConnectionErrors.DatasourcesNotFound:
+          case CreateConnectionErrors.DeviceDontMatchDatasource:
+          case CreateConnectionErrors.DeviceKeyIsInvalid:
+          default:
+            throw new HttpException(error.getError(), 422)
+        }
       }
-
     } catch (e) {
+      console.log(e)
       throw new HttpException(e, 500)
     }
   }

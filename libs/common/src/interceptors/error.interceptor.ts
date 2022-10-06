@@ -10,7 +10,7 @@ export class ErrorsInterceptor implements NestInterceptor {
       .pipe(
         catchError((err: unknown) => {
           if(err instanceof HttpErrors) {
-            throw new HttpException(err.message, err.code)
+            throw new HttpException(err.message, err.status)
           }
           throw err
         }),

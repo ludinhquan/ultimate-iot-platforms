@@ -5,10 +5,14 @@ authorization: {{TOKEN}}
 
 {
     "stationId": "60112a674be0bf001cebe760",
+    "datasourceIds": ["9f945e8b-cae0-4313-831e-d1134ad5a574", "81347bce-b46f-4432-aae8-f38b0a787bf7"],
     "items": [
-      {"deviceKey": "TSS", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "2e221068-4448-4cb8-b28e-1a497de9061f"},
-      {"deviceKey": "COD", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "2e221068-4448-4cb8-b28e-1a497de9061f"},
-      {"deviceKey": "Dust", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "91ec9dbb-7420-4ea0-a370-91dab5c948cd"}
+      {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "9f945e8b-cae0-4313-831e-d1134ad5a574"},
+      {"deviceKey": "Dust", "systemKey": "Dust", "ratio": 1, "status": "enabled", "datasourceId": "9f945e8b-cae0-4313-831e-d1134ad5a574"},
+      {"deviceKey": "COD", "systemKey": "COD", "ratio": 1, "status": "enabled", "datasourceId": "9f945e8b-cae0-4313-831e-d1134ad5a574"},
+      {"deviceKey": "COD", "systemKey": "Temp", "ratio": 1, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"},
+      {"deviceKey": "Dust", "systemKey": "O2", "ratio": 1, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"},
+      {"deviceKey": "TSS", "systemKey": null, "ratio": 1, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"}
     ]
 }
 
@@ -18,21 +22,21 @@ content-type: application/json
 authorization: {{TOKEN}}
 
 {
-  "stationId": "DL01_AE3745",
+  "stationId": "DL01_AE3743",
   "receivedAt": "2022-08-31T17:00:00.000",
   "measures": [
+    {
+      "parameter": "Nox",
+      "statusDevice": 2,
+      "value": 10
+    },
     {
       "parameter": "Dust",
       "statusDevice": 2,
       "value": 10
     },
     {
-      "parameter": "pH",
-      "statusDevice": 2,
-      "value": 10
-    },
-    {
-      "parameter": "COD",
+      "parameter": "O2",
       "statusDevice": 2,
       "value": 10
     }
@@ -45,7 +49,7 @@ content-type: application/json
 authorization: {{TOKEN}}
 
 {
-    "datasourceKey": "DL 01",
+    "datasourceKey": "DL01_AE3745",
     "devices": ["Dust", "COD", "TSS"]
 }
 
@@ -55,6 +59,6 @@ content-type: application/json
 authorization: {{TOKEN}}
 
 {
-    "datasourceKey": "DL 01",
+    "datasourceKey": "DL01_AE3745",
     "devices": ["TSS", "COD", "TSS"]
 }

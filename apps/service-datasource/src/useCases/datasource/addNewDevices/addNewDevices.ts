@@ -49,8 +49,8 @@ export class AddNewDevicesUseCase implements UseCase<AddNewDevicesDTO, Promise<A
     if (!datasource) return left(new AddNewDevicesErrors.DatasourceDontExists(data.datasourceKey));
 
     const devicesOrError = await this.getDevicesFromDTO(datasource, data.devices);
-    if(devicesOrError.isFailure)
-      return left(new AddNewDevicesErrors.DeviceKeyIsInvalid(devicesOrError.getError()))
+    // if(devicesOrError.isFailure)
+    //   return left(new AddNewDevicesErrors.DeviceKeyIsInvalid(devicesOrError.getError()))
 
     const devices = devicesOrError.getValue();
 
