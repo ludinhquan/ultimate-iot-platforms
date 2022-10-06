@@ -3,8 +3,8 @@ import {Entity, Result, UniqueEntityID} from "@iot-platforms/core";
 
 export class StationId extends Entity<any> {
 
-  get id (): UniqueEntityID {
-    return this._id;
+  get value () {
+    return this.getValue();
   }
 
   private constructor (id?: UniqueEntityID) {

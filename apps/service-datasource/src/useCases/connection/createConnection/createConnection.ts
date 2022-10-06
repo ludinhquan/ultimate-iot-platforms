@@ -33,6 +33,8 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     const datasourceIds = dto.datasourceIds
       .map(id => DatasourceId.create(new UniqueEntityID(id)).getValue());
 
+    const connectionOptional = await this.checkConnection(dto);
+
     const datasourceResults = await this.validateDatasources(datasourceIds);
 
     if (datasourceResults.isLeft()) return datasourceResults
@@ -44,14 +46,22 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     if (itemResults.isLeft()) return itemResults
 
     const connectionItems = (itemResults as ValidateItemsResult).value.getValue() as ConnectionItems;
-    const connection = Connection.create({
+
+    const connectionResult = Connection.create({
       stationId: StationId.create(new UniqueEntityID(dto.stationId)).getValue(),
       datasourceIds: datasourceIds,
       items: connectionItems
-    })
+    }, connectionOptional?.uniqueEntityID)
     
-    console.log(connection)
+    if (connectionResult.isFailure) left(connectionResult.getError())
+    await this.connectionRepo.save(connectionResult.getValue())
+
     return right(Result.ok(connectionItems))
+  }
+
+  async checkConnection(dto: CreateConnectionDTO): Promise<Connection | null> {
+    const connection = await this.connectionRepo.findOne({stationId: StationId.create(new UniqueEntityID(dto.stationId)).getValue()})
+    return connection
   }
 
   validateItems(dto: CreateConnectionDTO, datasources: Datasource[]): ValidateItemsResult {
@@ -72,7 +82,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
 
       const datasource = datasourceMap.get(item.datasourceId);
       if (!datasource.devices.exists(item.deviceKey))
-        return left(new CreateConnectionErrors.DeviceDontMatchDatasource(item.deviceKey, datasource.key.value));
+        return left(new CreateConnectionErrors.DeviceDontMatchDatasource(item.deviceKey, datasource.datasourceId.value));
 
       const connectionItem = ConnectionItem.create({
         deviceKey: deviceKeyOrError.getValue(),

@@ -9,5 +9,5 @@ export class ConnectionOrmEntity extends BaseEntity {
   stationId: string
 
   @Column()
-  datasourceId: string
+  datasourceIds: string[]
 }

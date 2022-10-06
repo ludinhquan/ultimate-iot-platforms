@@ -14,8 +14,8 @@ export namespace CreateConnectionErrors {
   }
 
   export class DeviceDontMatchDatasource extends Result<UseCaseError> {
-    constructor(deviceKey: string, datasourceKey: string) {
-      super(false, `Device ${deviceKey} is not included in datasource  with key ${datasourceKey} devices`)
+    constructor(deviceKey: string, datasourceId: string) {
+      super(false, `Device ${deviceKey} is not included in datasource  with key ${datasourceId} devices`)
     }
   }
 }
