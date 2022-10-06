@@ -1,5 +1,5 @@
 import {ErrorsInterceptor, ServiceDatasourceRoutes} from "@iot-platforms/common";
-import {CurrentOrganization, JwtAuthGuard, Result} from "@iot-platforms/core";
+import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {Body, Controller, HttpException, Post, UseGuards, UseInterceptors} from "@nestjs/common";
 import {RepositoryManager} from "apps/service-datasource/src/data-access";
 import {CreateConnectionUseCase} from "./createConnection";
@@ -20,11 +20,11 @@ export class CreateConnectionController {
     @CurrentOrganization() organization: IOrganization
   ){
     try {
-      const [datasourceRepo, systemDeviceRepo] = await Promise.all([
+      const [datasourceRepo, connectionRepo] = await Promise.all([
         this.repoManager.datasourceRepo(organization.id),
-        this.repoManager.systemDeviceRepo(organization.id)
+        this.repoManager.connectionRepo(organization.id)
       ]);
-      const useCase = new CreateConnectionUseCase(datasourceRepo)
+      const useCase = new CreateConnectionUseCase(datasourceRepo, connectionRepo)
       const result = await useCase.execute(dto)
 
       if (result.isLeft()) {

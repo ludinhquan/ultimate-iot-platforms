@@ -1,7 +1,7 @@
 import {MongoCoreModule} from "@iot-platforms/data-access";
 import {Module, Provider} from "@nestjs/common";
-import {DataSourceRepositoryImpl, DeviceRepositoryImpl, RepositoryManager, SystemDeviceRepositoryImpl} from "./implementations";
-import {DataSourceRepository, DeviceRepository, SystemDeviceRepository} from "./interfaces";
+import {ConnectionRepositoryImpl, DataSourceRepositoryImpl, DeviceRepositoryImpl, RepositoryManager, SystemDeviceRepositoryImpl} from "./implementations";
+import {ConnectionRepository, DataSourceRepository, DeviceRepository, SystemDeviceRepository} from "./interfaces";
 
 const repoProviders: (Provider & {export: boolean})[] = [
   {
@@ -17,6 +17,11 @@ const repoProviders: (Provider & {export: boolean})[] = [
   {
     provide: SystemDeviceRepository,
     useClass: SystemDeviceRepositoryImpl,
+    export: true
+  },
+  {
+    provide: ConnectionRepository,
+    useClass: ConnectionRepositoryImpl,
     export: true
   },
 ] 

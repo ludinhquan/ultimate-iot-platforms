@@ -1,6 +1,6 @@
 import {Either, left, Result, right, UniqueEntityID, UseCase} from "@iot-platforms/core";
-import {IDataSourceRepository} from "apps/service-datasource/src/data-access";
-import {ConnectionItem, ConnectionItems, Datasource, DatasourceId, DeviceKey, SystemDeviceKey} from "apps/service-datasource/src/domain";
+import {IConnectionRepository, IDataSourceRepository} from "apps/service-datasource/src/data-access";
+import {Connection, ConnectionItem, ConnectionItems, Datasource, DatasourceId, DeviceKey, StationId, SystemDeviceKey} from "apps/service-datasource/src/domain";
 import {CreateConnectionDTO} from "./createConnectionDTO";
 import {CreateConnectionErrors} from "./createConnectionErrors";
 
@@ -25,7 +25,8 @@ type ValidateItemsResult = Either<
 
 export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, CreateConnectionResponse> {
   constructor(
-    private datasourceRepo: IDataSourceRepository
+    private datasourceRepo: IDataSourceRepository,
+    private connectionRepo: IConnectionRepository
   ) {}
 
   async execute(dto: CreateConnectionDTO): Promise<CreateConnectionResponse> {
@@ -42,8 +43,14 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
 
     if (itemResults.isLeft()) return itemResults
 
-    const connectionItems = (itemResults as ValidateItemsResult).value.getValue();
-
+    const connectionItems = (itemResults as ValidateItemsResult).value.getValue() as ConnectionItems;
+    const connection = Connection.create({
+      stationId: StationId.create(new UniqueEntityID(dto.stationId)).getValue(),
+      datasourceIds: datasourceIds,
+      items: connectionItems
+    })
+    
+    console.log(connection)
     return right(Result.ok(connectionItems))
   }
 

@@ -1,9 +1,9 @@
 import {IRepository, TypeormHelperService} from "@iot-platforms/data-access";
 import {Injectable} from "@nestjs/common";
-import {IDataSourceRepository, IDeviceRepository, ISystemDeviceRepository} from "../../interfaces";
+import {IConnectionRepository, IDataSourceRepository, IDeviceRepository, ISystemDeviceRepository} from "../../interfaces";
 import {IRepositoryManager} from "../../interfaces/repository-manager.interface";
-import {DatasourceOrmEntity, DeviceOrmEntity, SystemDeviceOrmEntity} from "./entities";
-import {DataSourceRepositoryImpl, DeviceRepositoryImpl, SystemDeviceRepositoryImpl} from "./repositories";
+import {ConnectionOrmEntity, DatasourceOrmEntity, DeviceOrmEntity, SystemDeviceOrmEntity} from "./entities";
+import {ConnectionRepositoryImpl, DataSourceRepositoryImpl, DeviceRepositoryImpl, SystemDeviceRepositoryImpl} from "./repositories";
 
 @Injectable()
 export class RepositoryManager implements IRepositoryManager {
@@ -42,5 +42,15 @@ export class RepositoryManager implements IRepositoryManager {
       this.repoMaps.set(token, repo)
     }
     return this.repoMaps.get(token) as ISystemDeviceRepository
+  }
+
+  async connectionRepo(tenantId: string): Promise<IConnectionRepository> {
+    const token = this.typeormHelper.getRepoToken(tenantId, ConnectionRepositoryImpl);
+    if (!this.repoMaps.has(token)) {
+      const mongoRepo = await this.typeormHelper.getRepository(tenantId, ConnectionOrmEntity);
+      const repo = new ConnectionRepositoryImpl(mongoRepo)
+      this.repoMaps.set(token, repo)
+    }
+    return this.repoMaps.get(token) as IConnectionRepository
   }
 }
