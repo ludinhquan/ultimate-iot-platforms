@@ -1,5 +1,5 @@
 import {UniqueEntityID} from "@iot-platforms/core";
-import {Datasource, DatasourceKey} from "apps/service-datasource/src/domain";
+import {Datasource, DatasourceKey} from "@svc-datasource/domain";
 import {DatasourceOrmEntity} from "../entities";
 
 export class DatasourceMapper {

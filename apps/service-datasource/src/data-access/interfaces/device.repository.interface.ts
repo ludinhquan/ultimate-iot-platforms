@@ -1,5 +1,5 @@
 import {IRepository} from "@iot-platforms/data-access";
-import {Device, Devices} from "apps/service-datasource/src/domain";
+import {Device, Devices} from "@svc-datasource/domain";
 
 export const DeviceRepository = Symbol('IDeviceRepository');
 

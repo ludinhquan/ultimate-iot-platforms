@@ -2,8 +2,8 @@ import {ServiceDatasourceRoutes} from "@iot-platforms/common/config/serviceDatas
 import {ErrorsInterceptor} from "@iot-platforms/common/interceptors/error.interceptor";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {Body, Controller, Post, UseGuards, UseInterceptors} from "@nestjs/common";
-import {RepositoryManager} from "apps/service-datasource/src/data-access/implementations/mongo/repo-manager.service";
-import {DatasourceService} from "apps/service-datasource/src/domain";
+import {RepositoryManager} from "@svc-datasource/data-access/implementations/mongo/repo-manager.service";
+import {DatasourceService} from "@svc-datasource/domain";
 import {AddNewDevicesUseCase} from "./addNewDevices";
 import {AddNewDevicesDTO} from "./addNewDevicesDTO";
 

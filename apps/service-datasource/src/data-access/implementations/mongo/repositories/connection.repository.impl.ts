@@ -1,5 +1,5 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
-import {Connection, ConnectionId} from "apps/service-datasource/src/domain";
+import {Connection, ConnectionId} from "@svc-datasource/domain";
 import {MongoRepository} from "typeorm";
 import {IConnectionRepository} from "../../../interfaces";
 import {ConnectionOrmEntity} from "../entities";

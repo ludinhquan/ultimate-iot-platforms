@@ -1,6 +1,6 @@
 import {Either, left, Result, right, UniqueEntityID, UseCase} from "@iot-platforms/core";
-import {IConnectionRepository, IDataSourceRepository} from "apps/service-datasource/src/data-access";
-import {Connection, ConnectionItem, ConnectionItems, Datasource, DatasourceId, DeviceKey, StationId, SystemDeviceKey} from "apps/service-datasource/src/domain";
+import {IConnectionRepository, IDataSourceRepository} from "@svc-datasource/data-access";
+import {Connection, ConnectionItem, ConnectionItems, Datasource, DatasourceId, DeviceKey, StationId, SystemDeviceKey} from "@svc-datasource/domain";
 import {CreateConnectionDTO} from "./createConnectionDTO";
 import {CreateConnectionErrors} from "./createConnectionErrors";
 

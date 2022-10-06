@@ -1,4 +1,4 @@
-import {DatasourceType} from 'apps/service-datasource/src/domain';
+import {DatasourceType} from '@svc-datasource/domain';
 import {Column, Entity} from 'typeorm';
 import {BaseEntity} from './base.entity';
 

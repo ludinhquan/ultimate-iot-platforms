@@ -1,5 +1,5 @@
 import {UniqueEntityID} from "@iot-platforms/core";
-import {Connection, DatasourceId, StationId} from "apps/service-datasource/src/domain";
+import {Connection, DatasourceId, StationId} from "@svc-datasource/domain";
 import {ConnectionOrmEntity} from "../entities";
 
 export class ConnectionMapper {

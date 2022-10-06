@@ -53,6 +53,12 @@
       ],
       "@iot-platforms/contracts/*": [
         "libs/contracts/src/*"
+      ],
+      "@svc-datasource": [
+        "apps/service-datasource/src"
+      ],
+      "@svc-datasource/*": [
+        "apps/service-datasource/src/*"
       ]
     },
     "typeRoots": [

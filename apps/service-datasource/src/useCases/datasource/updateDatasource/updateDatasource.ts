@@ -1,7 +1,7 @@
 import {Either, left, Result, UseCase} from "@iot-platforms/core";
 import {Logger} from "@nestjs/common";
-import {IDataSourceRepository, ISystemDeviceRepository} from "apps/service-datasource/src/data-access";
-import {Datasource, DatasourceKey, DatasourceService, Device, DeviceKey, Devices} from "apps/service-datasource/src/domain";
+import {IDataSourceRepository, ISystemDeviceRepository} from "@svc-datasource/data-access";
+import {Datasource, DatasourceKey, DatasourceService, Device, DeviceKey, Devices} from "@svc-datasource/domain";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
 
 type UpdateDatasourceResponse = Either<

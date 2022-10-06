@@ -2,7 +2,7 @@ import {MeasuringLogs, StatusDevice} from "@iot-platforms/contracts";
 import {Result} from "@iot-platforms/core";
 import {EventBusHandler, IEventHandler, RawDataReceivedEvent} from "@iot-platforms/event-bus";
 import {Inject, Logger} from "@nestjs/common";
-import {IRepositoryManager, RepositoryManager} from "apps/service-datasource/src/data-access";
+import {IRepositoryManager, RepositoryManager} from "@svc-datasource/data-access";
 import {UpdateDatasourceUseCase} from "./updateDatasource";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
 

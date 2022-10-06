@@ -1,5 +1,5 @@
 import {UniqueEntityID} from "@iot-platforms/core";
-import {DatasourceId, Device, DeviceKey, SystemDeviceKey} from "apps/service-datasource/src/domain";
+import {DatasourceId, Device, DeviceKey, SystemDeviceKey} from "@svc-datasource/domain";
 import {DeviceOrmEntity} from "../entities";
 
 export class DeviceMapper {

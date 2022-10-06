@@ -1,5 +1,5 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
-import {Datasource, DatasourceId, DatasourceKey, Devices} from "apps/service-datasource/src/domain";
+import {Datasource, DatasourceId, DatasourceKey, Devices} from "@svc-datasource/domain";
 import {MongoRepository} from "typeorm";
 import {IDataSourceRepository, IDeviceRepository} from "../../../interfaces";
 import {DatasourceOrmEntity} from "../entities";
