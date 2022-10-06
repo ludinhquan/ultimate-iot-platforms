@@ -1,4 +1,4 @@
-import {DatasourceType} from '@svc-datasource/domain';
+import {DatasourceType} from '@iot-platforms/contracts';
 import {Column, Entity} from 'typeorm';
 import {BaseEntity} from './base.entity';
 

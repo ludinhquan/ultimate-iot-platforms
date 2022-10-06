@@ -1,7 +1,7 @@
+import {DatasourceType} from "@iot-platforms/contracts";
 import {AggregateRoot, Guard, Result, UniqueEntityID} from "@iot-platforms/core";
 import {DatasourceId} from "./datasourceId";
 import {DatasourceKey} from './datasourceKey'
-import {DatasourceType} from "./datasourceType";
 import {Devices} from "./devices";
 
 export interface DatasourceProps {

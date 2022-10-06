@@ -6,7 +6,6 @@ export * from './connectionItems'
 export * from './datasource'
 export * from './datasourceId'
 export * from './datasourceKey'
-export * from './datasourceType'
 
 export * from './device'
 export * from './deviceId'
