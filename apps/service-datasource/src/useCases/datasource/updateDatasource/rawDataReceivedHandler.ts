@@ -16,18 +16,17 @@ export class RawDataReceivedEventHandler implements IEventHandler<RawDataReceive
 
   transformEventToDTO(event: RawDataReceivedEvent): UpdateDatasourceDTO{
     return {
-      datasourceKey: event.stationId,
-      measuringLogs: event.measures
-      .filter(item => !!item.parameter)
-      .reduce(
-        (prev: MeasuringLogs, item) => ({
-          ...prev,
-          [item.parameter]: {
-            value: Number(item.value),
-            statusDevice: Number(item.statusDevice) as StatusDevice,
-          }
-        }), {}
-      )
+      datasourceKey: event.datasourceKey,
+      measuringLogs: Object.keys(event.measuringLogs)
+        .reduce(
+          (prev: MeasuringLogs, key) => ({
+            ...prev,
+            [key]: {
+              value: Number(event.measuringLogs[key].value),
+              statusDevice: Number(event.measuringLogs[key].statusDevice) as StatusDevice,
+            }
+          }), {}
+        )
     }
   }
 
