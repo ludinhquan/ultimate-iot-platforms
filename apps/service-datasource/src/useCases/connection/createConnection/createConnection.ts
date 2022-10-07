@@ -54,7 +54,9 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     }, connectionOptional?.uniqueEntityID)
     
     if (connectionResult.isFailure) left(connectionResult.getError())
-    await this.connectionRepo.save(connectionResult.getValue())
+    const connection = connectionResult.getValue()
+
+    await this.connectionRepo.save(connection)
 
     return right(Result.ok(connectionItems))
   }
