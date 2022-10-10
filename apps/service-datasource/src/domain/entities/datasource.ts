@@ -16,7 +16,7 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
   private static readonly initialTotalDevice = 0;
   
   get datasourceId(): DatasourceId {
-    return DatasourceId.create(this._id).getValue()
+    return DatasourceId.create(this.id).getValue()
   }
 
   get key(){

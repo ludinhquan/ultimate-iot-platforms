@@ -31,7 +31,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
 
   async execute(dto: CreateConnectionDTO): Promise<CreateConnectionResponse> {
     const datasourceIds = dto.datasourceIds
-      .map(id => DatasourceId.create(new UniqueEntityID(id)).getValue());
+      .map(id => DatasourceId.create(id).getValue());
 
     const connectionOptional = await this.checkConnection(dto);
 
@@ -51,7 +51,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     const connectionItems = (itemResults as ValidateItemsResult).value.getValue() as ConnectionItems;
 
     const connectionResult = Connection.create({
-      stationId: StationId.create(new UniqueEntityID(dto.stationId)).getValue(),
+      stationId: StationId.create().getValue(),
       datasourceIds: datasourceIds,
       items: connectionItems
     }, connectionId?.id)

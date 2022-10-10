@@ -19,7 +19,7 @@ export class ConnectionItem extends Entity<ConnectionItemProps> {
   static defaultRatio = 1
   
   get connectionItemId(){
-    return ConnectionItemId.create(this._id).getValue()
+    return ConnectionItemId.create(this.id).getValue()
   }
 
   get datasourceId(){

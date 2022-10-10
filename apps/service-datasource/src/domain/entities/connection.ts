@@ -12,7 +12,7 @@ export interface ConnectionProps {
 
 export class Connection extends AggregateRoot<ConnectionProps> {
   get connectionId (){
-    return ConnectionId.create(this._id).getValue()
+    return ConnectionId.create(this.id).getValue()
   }
 
   get stationId (){

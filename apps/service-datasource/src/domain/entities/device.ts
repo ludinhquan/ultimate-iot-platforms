@@ -12,7 +12,7 @@ export interface DeviceProps {
 
 export class Device extends Entity<DeviceProps> {
   get deviceId(): DeviceId{
-    return DeviceId.create(this._id).getValue()
+    return DeviceId.create(this.id).getValue()
   }
 
   get key() {
