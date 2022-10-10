@@ -3,8 +3,10 @@ import {IEventBus, IEventHandler, KafkaOptions} from '../../interfaces';
 import {IntegrationEvent} from '../../abstracts';
 import {EventBusSubscriptionsManager} from "../event-bus.subscriptions-manager";
 import {KafkaSingleton} from "./kafka.singleton";
+import {Logger} from "@iot-platforms/common";
 
 export class KafkaEventBus implements IEventBus {
+  private logger = new Logger(this.constructor.name)
   private client: Kafka
   private admin: Admin
   private producer: Producer
@@ -55,7 +57,7 @@ export class KafkaEventBus implements IEventBus {
           const jsonData = JSON.parse(message);
           const data = new event()
           const result = await handler.handle(data, jsonData)
-          console.log(payload.topic, handler.constructor.name)
+          this.logger.log(`${payload.topic}, ${handler.constructor.name}`)
           if (result.isSuccess) await consumer.commitOffsets([
             {topic: payload.topic, partition: payload.partition, offset: payload.message.offset}
           ])

@@ -1,4 +1,8 @@
+import {Logger} from "@iot-platforms/common";
+
 export class Result<T> {
+  private logger = new Logger(this.constructor.name)
+
   private readonly _isSuccess: boolean;
   private readonly _isFailure: boolean
   private readonly error: T | string;
@@ -30,7 +34,7 @@ export class Result<T> {
 
   public getValue () : T {
     if (!this._isSuccess) {
-      console.log(this.error);
+      this.logger.error(this.error);
       throw new Error("Can't get the value of an error result. Use 'errorValue' instead.")
     } 
 

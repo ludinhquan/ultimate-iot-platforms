@@ -1,4 +1,4 @@
-import {ErrorsInterceptor, ServiceDatasourceRoutes} from "@iot-platforms/common";
+import {ErrorsInterceptor, Logger, ServiceDatasourceRoutes} from "@iot-platforms/common";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {Body, Controller, HttpException, Post, UseGuards, UseInterceptors} from "@nestjs/common";
 import {RepositoryManager} from "@svc-datasource/data-access";
@@ -10,6 +10,8 @@ import {CreateConnectionErrors} from "./createConnectionErrors";
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ErrorsInterceptor)
 export class CreateConnectionController {
+  private logger = new Logger(this.constructor.name)
+
   constructor(
     private repoManager: RepositoryManager
   ){ }
@@ -38,7 +40,7 @@ export class CreateConnectionController {
         }
       }
     } catch (e) {
-      console.log(e)
+      this.logger.error(e)
       throw new HttpException(e, 500)
     }
   }

@@ -1,3 +1,4 @@
+import {Logger} from "@iot-platforms/common";
 import {Channel, Connection, Options} from "amqplib";
 import {IntegrationEvent} from '../../abstracts';
 import {IEventBus, IEventHandler, RmqOptions, SubscribeOptions} from '../../interfaces';
@@ -5,6 +6,8 @@ import {EventBusSubscriptionsManager} from "../event-bus.subscriptions-manager";
 import {RabbitMQSingleton} from "./rabbitmq.singleton";
 
 export class RabbitMQEventBus implements IEventBus {
+  private logger = new Logger(this.constructor.name)
+
   private channel: Channel
   private connection: Connection
   private subscribers: { event: ClassType<IntegrationEvent>, handler: IEventHandler, options?: SubscribeOptions }[] = []
@@ -39,14 +42,14 @@ export class RabbitMQEventBus implements IEventBus {
       if (!msg) return
       const jsonData = JSON.parse(msg.content.toString());
       const eventData = new eventClass(jsonData)
-      console.log(
+      this.logger.log(
         `[${handler.constructor.name}] Processing RabbitMQ event: ${eventClass.name}`, eventData.getAggregateId(), options?.logJsonData === true ? jsonData : '', 
       );
       try {
         const result = await handler.handle(eventData, jsonData)
         if (result.isSuccess) this.channel.ack(msg)
       } catch (e: any) {
-        console.log(e.message)
+        this.logger.error(e.message)
       }
     })
   }
@@ -57,7 +60,7 @@ export class RabbitMQEventBus implements IEventBus {
       clearInterval(timeInterval)
       await Promise.all(events.map(async event => {
         const exchange = event.name;
-        console.log(`Creating RabbitMQ exchange ${exchange}`)
+        this.logger.log(`Creating RabbitMQ exchange ${exchange}`)
         await this.channel.assertExchange(exchange, 'direct')
       }, 100));
     });
@@ -66,12 +69,12 @@ export class RabbitMQEventBus implements IEventBus {
   public async publish(event: IntegrationEvent) {
     const exchange = event.constructor.name
     const basicOptions: Options.Publish = {deliveryMode: 2, mandatory: true}
-    console.log(`Publishing event ${exchange} to RabbitMQ with event id ${event.getAggregateId()}`);
+    this.logger.log(`Publishing event ${exchange} to RabbitMQ with event id ${event.getAggregateId()}`);
     this.channel.publish(exchange, '', Buffer.from(JSON.stringify(event)), basicOptions)
   }
 
   public async subscribe(event: ClassType<IntegrationEvent>, handler: IEventHandler, options?: SubscribeOptions) {
-    console.log(`Subscribing to event ${event.name} with ${handler.constructor.name}`);
+    this.logger.log(`Subscribing to event ${event.name} with ${handler.constructor.name}`);
     this.manager.addSubscription(event, handler);
     if(!this.channel) {
       this.subscribers.push({event, handler, options});
