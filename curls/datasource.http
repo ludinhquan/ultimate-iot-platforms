@@ -7,12 +7,10 @@ authorization: {{TOKEN}}
     "stationId": "60112a674be0bf001cebe760",
     "datasourceIds": ["9f945e8b-cae0-4313-831e-d1134ad5a574", "81347bce-b46f-4432-aae8-f38b0a787bf7"],
     "items": [
-      {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "9f945e8b-cae0-4313-831e-d1134ad5a574"},
-      {"deviceKey": "Dust", "systemKey": "Dust", "ratio": 1, "status": "enabled", "datasourceId": "9f945e8b-cae0-4313-831e-d1134ad5a574"},
-      {"deviceKey": "COD", "systemKey": "COD", "ratio": 1, "status": "enabled", "datasourceId": "9f945e8b-cae0-4313-831e-d1134ad5a574"},
-      {"deviceKey": "COD", "systemKey": "Temp", "ratio": 1, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"},
-      {"deviceKey": "Dust", "systemKey": "O2", "ratio": 1, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"},
-      {"deviceKey": "TSS", "systemKey": null, "ratio": 1, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"}
+      {"deviceKey": "COD", "systemKey": "COD", "ratio": 1, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"},
+      {"deviceKey": "TSS", "systemKey": null, "ratio": 2, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"},
+      {"deviceKey": "pH", "systemKey": "pH", "ratio": 2, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"},
+      {"deviceKey": "Temp", "systemKey": null, "ratio": 2, "status": "enabled", "datasourceId": "81347bce-b46f-4432-aae8-f38b0a787bf7"}
     ]
 }
 
@@ -22,25 +20,14 @@ content-type: application/json
 authorization: {{TOKEN}}
 
 {
-  "stationId": "DL01_AE3743",
+  "datasourceKey": "DL01_AE3743",
   "receivedAt": "2022-08-31T17:00:00.000",
-  "measures": [
-    {
-      "parameter": "Nox",
-      "statusDevice": 2,
-      "value": 10
-    },
-    {
-      "parameter": "Dust",
-      "statusDevice": 2,
-      "value": 10
-    },
-    {
-      "parameter": "O2",
-      "statusDevice": 2,
-      "value": 10
-    }
-  ]
+  "measuringLogs": {
+    "COD": {"value": 12.43, "statusDevice": "01"},
+    "pH": {"value": 12.43, "statusDevice": "01"},
+    "TSS": {"value": 12.43, "statusDevice": "01"},
+    "Temp": {"value": 12.43, "statusDevice": "02"}
+  } 
 }
 
 ### create datasources

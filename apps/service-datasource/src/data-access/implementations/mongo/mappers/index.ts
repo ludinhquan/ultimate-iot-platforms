@@ -1,3 +1,5 @@
 export * from './datasource.mapper'
+export * from './connection.mapper'
+export * from './connection-item.mapper'
 export * from './device.mapper'
 export * from './system-device.mapper'

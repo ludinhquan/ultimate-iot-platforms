@@ -1,13 +1,14 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
-import {Connection, ConnectionId} from "@svc-datasource/domain";
+import {Connection, ConnectionId, ConnectionItems} from "@svc-datasource/domain";
 import {MongoRepository} from "typeorm";
-import {IConnectionRepository} from "../../../interfaces";
+import {IConnectionItemRepository, IConnectionRepository} from "../../../interfaces";
 import {ConnectionOrmEntity} from "../entities";
 import {ConnectionMapper} from "../mappers/connection.mapper";
 
 export class ConnectionRepositoryImpl implements IConnectionRepository {
   constructor(
-    private repo: MongoRepository<ConnectionOrmEntity>
+    private repo: MongoRepository<ConnectionOrmEntity>,
+    private itemRepo: IConnectionItemRepository
   ){ }
 
   private buildBasicQuery(connection: Partial<Connection>){
@@ -22,13 +23,16 @@ export class ConnectionRepositoryImpl implements IConnectionRepository {
     const rawData = ConnectionMapper.toPersistence(connection)
     const exists = await this.exists(connection.connectionId);
     const isNewConnection = !exists;
+
     if(isNewConnection) {
       await this.repo.save(rawData)
+      await this.itemRepo.bulkSave(connection.items)
       return
     }
 
     const query = this.buildBasicQuery({connectionId: connection.connectionId})
     await this.repo.updateOne(query, {$set: rawData})
+    await this.itemRepo.bulkSave(connection.items)
   }
 
   async exists(connectionId: ConnectionId): Promise<boolean> {
@@ -43,5 +47,9 @@ export class ConnectionRepositoryImpl implements IConnectionRepository {
     const result = await this.repo.findOne(query);
     if(!result) return null
     return ConnectionMapper.toDomain(result);
+  }
+
+  async getItems(connectionId: ConnectionId): Promise<ConnectionItems> {
+    return this.itemRepo.find({connectionId})
   }
 }

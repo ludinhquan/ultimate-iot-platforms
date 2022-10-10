@@ -11,10 +11,6 @@ export interface ConnectionProps {
 }
 
 export class Connection extends AggregateRoot<ConnectionProps> {
-  get uniqueEntityID (){
-    return this._id
-  }
-
   get connectionId (){
     return ConnectionId.create(this._id).getValue()
   }

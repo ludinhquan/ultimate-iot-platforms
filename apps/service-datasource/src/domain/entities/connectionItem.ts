@@ -1,11 +1,14 @@
 import {ConnectionItemStatus} from "@iot-platforms/contracts";
 import {Entity, Guard, Result, UniqueEntityID} from "@iot-platforms/core";
+import {ConnectionId} from "./connectionId";
+import {ConnectionItemId} from "./connectionItemId";
 import {DatasourceId} from "./datasourceId";
 import {DeviceKey} from "./deviceKey";
 import {SystemDeviceKey} from "./systemDeviceKey";
 
 export interface ConnectionItemProps {
   datasourceId: DatasourceId,
+  connectionId: ConnectionId,
   deviceKey: DeviceKey,
   systemKey?: SystemDeviceKey,
   status?: ConnectionItemStatus
@@ -14,9 +17,17 @@ export interface ConnectionItemProps {
 
 export class ConnectionItem extends Entity<ConnectionItemProps> {
   static defaultRatio = 1
+  
+  get connectionItemId(){
+    return ConnectionItemId.create(this._id).getValue()
+  }
 
   get datasourceId(){
     return this.props.datasourceId
+  }
+
+  get connectionId(){
+    return this.props.connectionId
   }
 
   get deviceKey(){

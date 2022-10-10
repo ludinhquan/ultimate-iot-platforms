@@ -22,9 +22,13 @@ export class DeviceRepositoryImpl implements IDeviceRepository {
   async bulkSave(devices: Devices) {
     const list = devices.getItems().map(DeviceMapper.toPersistence)
     const insertResult = await this.repo.save(list)
-    this.logger.log(`Insert ${insertResult.length} devices successfully!`);
-    this.logger.debug('Insert devices result:', ...insertResult);
-    return true
+    
+    if(insertResult.length){
+      this.logger.log(`Insert ${insertResult.length} devices successfully!`);
+      this.logger.debug('Insert devices result:', ...insertResult);
+    }
+
+    return {total: insertResult.length}
   }
 
   async find(device: Partial<Device>): Promise<Devices> {

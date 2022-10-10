@@ -1,4 +1,5 @@
 export * from './connection.orm-entity'
+export * from './connection-item.orm-entity'
 export * from './datasource.orm-entity'
 export * from './device.orm-entity'
 export * from './system-device.orm-entity'

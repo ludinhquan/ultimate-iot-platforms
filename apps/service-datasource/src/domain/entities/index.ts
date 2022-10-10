@@ -1,6 +1,7 @@
 export * from './connection'
 export * from './connectionId'
 export * from './connectionItem'
+export * from './connectionItemId'
 export * from './connectionItems'
 
 export * from './datasource'

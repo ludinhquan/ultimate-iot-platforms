@@ -1,6 +1,6 @@
 import {Either, left, Result, right, UniqueEntityID, UseCase} from "@iot-platforms/core";
 import {IConnectionRepository, IDataSourceRepository} from "@svc-datasource/data-access";
-import {Connection, ConnectionItem, ConnectionItems, Datasource, DatasourceId, DeviceKey, StationId, SystemDeviceKey} from "@svc-datasource/domain";
+import {Connection, ConnectionId, ConnectionItem, ConnectionItems, Datasource, DatasourceId, DeviceKey, StationId, SystemDeviceKey} from "@svc-datasource/domain";
 import {CreateConnectionDTO} from "./createConnectionDTO";
 import {CreateConnectionErrors} from "./createConnectionErrors";
 
@@ -37,11 +37,14 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
 
     const datasourceResults = await this.validateDatasources(datasourceIds);
 
-    if (datasourceResults.isLeft()) return datasourceResults
+    if (datasourceResults.isLeft()) return datasourceResults;
 
     const datasources = datasourceResults.value.getValue()
 
-    const itemResults = this.validateItems(dto, datasources)
+    const connectionId = ConnectionId.create(connectionOptional?.id).getValue();
+
+    const oldItems = await this.connectionRepo.getItems({connectionId});
+    const itemResults = this.validateItems(dto, {datasources, items: oldItems, connectionId});
 
     if (itemResults.isLeft()) return itemResults
 
@@ -51,7 +54,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
       stationId: StationId.create(new UniqueEntityID(dto.stationId)).getValue(),
       datasourceIds: datasourceIds,
       items: connectionItems
-    }, connectionOptional?.uniqueEntityID)
+    }, connectionId?.id)
     
     if (connectionResult.isFailure) left(connectionResult.getError())
     const connection = connectionResult.getValue()
@@ -66,7 +69,13 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     return connection
   }
 
-  validateItems(dto: CreateConnectionDTO, datasources: Datasource[]): ValidateItemsResult {
+  validateItems(
+    dto: CreateConnectionDTO,
+    params: {items: ConnectionItems, datasources: Datasource[], connectionId: ConnectionId}
+  ): ValidateItemsResult {
+
+    const {datasources, connectionId, items} = params
+
     const datasourceMap = new Map(datasources.map(datasource => [datasource.datasourceId.value, datasource]));
 
     const connectionItemResults = dto.items.map(item => {
@@ -86,13 +95,16 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
       if (!datasource.devices.exists(item.deviceKey))
         return left(new CreateConnectionErrors.DeviceDontMatchDatasource(item.deviceKey, datasource.datasourceId.value));
 
+      const uniqueKey = [item.deviceKey, item.datasourceId].join();
+
       const connectionItem = ConnectionItem.create({
+        connectionId,
+        datasourceId: datasource.datasourceId,
         deviceKey: deviceKeyOrError.getValue(),
         systemKey: systemKeyOrError ? systemKeyOrError.getValue() : null,
-        datasourceId: datasource.datasourceId,
         ratio: item.ratio,
         status: item.status
-      })
+      }, items.get(uniqueKey)?.id)
 
       if(connectionItem.isFailure) return left(connectionItem.getError())
 
@@ -100,10 +112,10 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     })
 
     const error = connectionItemResults.find(result => result.isLeft());
-    if(error) return error as ValidateItemsResult
+    if(error) return error as ValidateItemsResult;
 
-    const items = connectionItemResults.map(item => item.value as ConnectionItem);
-    const connectionItems = ConnectionItems.create(items);
+    const list = connectionItemResults.map(item => item.value as ConnectionItem);
+    const connectionItems = ConnectionItems.create(list);
 
     if(connectionItems.isFailure) return left(connectionItems);
 
