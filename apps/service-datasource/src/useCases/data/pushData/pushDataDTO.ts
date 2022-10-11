@@ -1,12 +1,12 @@
 import {MeasuringLogs} from "@iot-platforms/contracts"
-import {IsBoolean, IsDate, IsObject, IsString, MinLength} from "class-validator"
+import {IsDateString, IsObject, IsString, MinLength} from "class-validator"
 
 export class PushDataDTO {
   @IsString()
   @MinLength(1)
   datasourceKey: string
 
-  @IsDate()
+  @IsDateString()
   receivedAt: string
 
   @IsObject()

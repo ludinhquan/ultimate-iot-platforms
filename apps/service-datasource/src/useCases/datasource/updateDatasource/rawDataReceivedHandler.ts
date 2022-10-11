@@ -43,7 +43,7 @@ export class RawDataReceivedEventHandler implements IEventHandler<RawDataReceive
       const result = await useCase.execute(dto)
 
       if (result && result.isLeft()) {
-        this.logger.error(result.value.getError())
+        this.logger.error(result.value.toJson())
         return Result.ok()
       }
 

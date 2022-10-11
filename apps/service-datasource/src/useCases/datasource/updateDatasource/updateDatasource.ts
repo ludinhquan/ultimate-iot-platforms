@@ -1,16 +1,15 @@
 import {Either, left, Result, UseCase} from "@iot-platforms/core";
-import {Logger} from "@nestjs/common";
 import {IDataSourceRepository, ISystemDeviceRepository} from "@svc-datasource/data-access";
 import {Datasource, DatasourceKey, DatasourceService, Device, DeviceKey, Devices} from "@svc-datasource/domain";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
+import {UpdateDatasourceErrors as Errors} from "./updateDatasourceError";
 
-type UpdateDatasourceResponse = Either<
-  Result<any>,
-  void
+type UpdateDatasourceResponse<T = void> = Either<
+  Errors.UpdatedatasourceBadRequest,
+  Result<T>
 >
 
 export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, UpdateDatasourceResponse> {
-  private logger = new Logger(this.constructor.name)
   private datasourceService = new DatasourceService()
 
   constructor(
@@ -20,7 +19,8 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
 
   async execute(dto: UpdateDatasourceDTO): Promise<UpdateDatasourceResponse> {
     const datasourceKeyOrError = DatasourceKey.create({value: dto.datasourceKey});
-    if(datasourceKeyOrError.isFailure) return left(datasourceKeyOrError)
+    if(datasourceKeyOrError.isFailure) 
+      return left(new Errors.UpdatedatasourceBadRequest(datasourceKeyOrError.getError()))
 
     const datasourceKey = datasourceKeyOrError.getValue();
     const deviceKeys = Object.keys(dto.measuringLogs);
