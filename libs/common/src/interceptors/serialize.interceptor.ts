@@ -26,7 +26,7 @@ export class SerializeInterceptor implements NestInterceptor {
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
 
-        if(data instanceof UseCaseError) {
+        if (data instanceof UseCaseError) {
           response
             .status(data.status)
             .json({

@@ -1,4 +1,5 @@
 import {SerializeInterceptor} from '@iot-platforms/common';
+import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 
@@ -12,6 +13,7 @@ Object.defineProperty(global, 'isDevelopment', {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableShutdownHooks()
+  app.useGlobalPipes(new ValidationPipe())
   app.useGlobalInterceptors(new SerializeInterceptor())
   await app.listen(4000);
 }

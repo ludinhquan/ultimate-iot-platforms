@@ -1,13 +1,7 @@
-import {MeasuringLogs} from "@iot-platforms/contracts";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {EventBusToken, IEventBus, RawDataReceivedEvent} from "@iot-platforms/event-bus";
 import {Body, Controller, Inject, Post, UseGuards} from "@nestjs/common";
-
-type dataDTO = {
-  datasourceKey: string,
-  receivedAt: string,
-  measuringLogs: MeasuringLogs
-}
+import {PushDataDTO} from "./pushDataDTO";
 
 @Controller()
 @UseGuards(JwtAuthGuard)
@@ -18,15 +12,16 @@ export class PushDataController {
 
   @Post('push-data')
   pushData(
-    @Body() data: dataDTO,
+    @Body() data: PushDataDTO,
     @CurrentOrganization() organization: IOrganization
   ){
-    const event = new RawDataReceivedEvent({
-      organizationId: organization.id,
-      datasourceKey: data.datasourceKey,
-      receivedAt: data.receivedAt,
-      measuringLogs: data.measuringLogs
-    })
-    this.eventBus.publish(event)
+    console.log(data)
+    // const event = new RawDataReceivedEvent({
+    //   organizationId: organization.id,
+    //   datasourceKey: data.datasourceKey,
+    //   receivedAt: data.receivedAt,
+    //   measuringLogs: data.measuringLogs
+    // })
+    // this.eventBus.publish(event)
   }
 }
