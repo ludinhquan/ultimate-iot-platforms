@@ -9,7 +9,7 @@ import {Logger} from '../logger';
 
 @Injectable()
 export class HttpInterceptor implements NestInterceptor {
-  private logger = new Logger(HttpInterceptor.name)
+  private logger = new Logger('HTTP')
 
   intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
     const ctx = context.switchToHttp()

@@ -32,7 +32,7 @@ export class RabbitMQEventBus implements IEventBus {
     }
   }
 
-  private async addSubscription(eventClass: ClassType<IntegrationEvent>, handler: IEventHandler, options?: SubscribeOptions) {
+  private async addSubscription(eventClass: ClassType<IntegrationEvent>, handler: IEventHandler, _?: SubscribeOptions) {
     const exchange = eventClass.name;
     const queueName = [exchange, handler.constructor.name].join('.')
     await this.channel.assertQueue(queueName)
@@ -43,8 +43,7 @@ export class RabbitMQEventBus implements IEventBus {
       const jsonData = JSON.parse(msg.content.toString());
       const eventData = new eventClass(jsonData)
       this.logger.log(
-        `[${handler.constructor.name}] Processing RabbitMQ event: ${eventClass.name}`, eventData.getAggregateId(), options?.logJsonData === true ? jsonData : '', 
-      );
+        `[${handler.constructor.name}] Processing RabbitMQ event: ${eventClass.name} ${eventData.getAggregateId()}`);
       try {
         const result = await handler.handle(eventData, jsonData)
         if (result.isSuccess) this.channel.ack(msg)
