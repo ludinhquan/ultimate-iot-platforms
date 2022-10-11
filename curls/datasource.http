@@ -8,7 +8,6 @@ authorization: {{TOKEN}}
 
 { 
   "stationId": "60112a674be0bf001cebe760",
-  "datasourceIds": ["2e221068-4448-4cb8-b28e-1a497de9061f", "91ec9dbb-7420-4ea0-a370-91dab5c948cd", "d24b66c9-5b9c-44f9-8e29-98e6c910ce52"],
   "items": [
     {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "91ec9dbb-7420-4ea0-a370-91dab5c948cd"},
     {"deviceKey": "Dust", "systemKey": "Dust", "ratio": 2, "status": "enabled", "datasourceId": "91ec9dbb-7420-4ea0-a370-91dab5c948cd"},

@@ -37,6 +37,8 @@ export class CreateConnectionController {
             return error
         }
       }
+      const connection = result.value.getValue()
+      return {connectionId: connection.connectionId.value}
     } catch (e) {
       return new AppError.UnexpectedError(e)
     }

@@ -21,21 +21,21 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     private connectionRepo: IConnectionRepository
   ) {}
   
-  async execute(dto: CreateConnectionDTO): Promise<CreateConnectionResponse> {
-    const [connectionResult, datasourceResults] = await Promise.all([
-      this.getConnection(dto),
-      this.getDatasources(dto)
-    ])
+  async execute(dto: CreateConnectionDTO): Promise<CreateConnectionResponse<Connection>> {
+    const datasourceResults = await this.getDatasources(dto);
+    if (datasourceResults.isLeft()) return left(datasourceResults.value);
 
-    if (datasourceResults.isLeft()) return datasourceResults;
+    const datasources = datasourceResults.value.getValue();
+    const datasourceIds = datasources.map(datasource => datasource.datasourceId)
+
+    const connectionResult = await this.getConnection(dto, datasourceIds)
     if (connectionResult.isLeft()) return connectionResult;
 
     const connection = connectionResult.value.getValue();
-    const datasources = datasourceResults.value.getValue();
 
     const connectionItemResults = await this.getConnectionItems(dto, {connection, datasources})
 
-    if (connectionItemResults.isLeft()) return connectionItemResults
+    if (connectionItemResults.isLeft()) return left(connectionItemResults.value)
 
     const connectionItems = connectionItemResults.value.getValue()
     connection.updateItems(connectionItems);
@@ -44,7 +44,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     return right(Result.ok(connection))
   }
 
-  async getConnection(dto: CreateConnectionDTO): Promise<GetConnectionResult> {
+  async getConnection(dto: CreateConnectionDTO, datasourceIds: DatasourceId[]): Promise<GetConnectionResult> {
     const stationIdResult = StationId.create(dto.stationId);
 
     if (stationIdResult.isFailure)
@@ -53,7 +53,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     const stationId = stationIdResult.getValue()
     const connectionOptional = await this.connectionRepo.findOne({stationId});
 
-    const connectionResult = Connection.create({stationId}, connectionOptional?.id)
+    const connectionResult = Connection.create({stationId, datasourceIds}, connectionOptional?.id)
     if(connectionResult.isFailure) return left(new Errors.BadRequest(connectionResult.getError()))
 
     return right(connectionResult)
@@ -106,7 +106,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
       })
 
     const error = connectionItemResults.find(result => result.isLeft());
-    if(error.isLeft()) return left(error.value)
+    if (error && error.isLeft()) return left(error.value)
 
     const list = connectionItemResults.map(item => (item.value as Result<ConnectionItem>).getValue());
     const connectionItemResult = ConnectionItems.create(list);
