@@ -40,4 +40,4 @@ const handlers = [
     ...fakeDataController
   ]
 })
-export class AppModule { }
+export class AppModule {}

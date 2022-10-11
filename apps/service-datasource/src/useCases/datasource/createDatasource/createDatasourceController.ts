@@ -1,4 +1,4 @@
-import {ErrorsInterceptor, ServiceDatasourceRoutes} from "@iot-platforms/common";
+import {ServiceDatasourceRoutes} from "@iot-platforms/common";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {Body, Controller, Post, UseGuards, UseInterceptors} from "@nestjs/common";
 import {RepositoryManager} from "@svc-datasource/data-access";
@@ -7,7 +7,6 @@ import {CreateDatasourceDTO} from "./createDatasourceDTO";
 
 @Controller(ServiceDatasourceRoutes.Datasource.Root)
 @UseGuards(JwtAuthGuard)
-@UseInterceptors(ErrorsInterceptor)
 export class CreateDatasourceController {
   constructor(
     private repoManager: RepositoryManager,

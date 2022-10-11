@@ -17,4 +17,3 @@ interface IUser {
   iat: number,
   organization: IOrganization
 }
-

@@ -1,21 +1,33 @@
-import {Result, UseCaseError} from "@iot-platforms/core"
+import {UseCaseCode, UseCaseError} from "@iot-platforms/core"
 
 export namespace CreateConnectionErrors {
-  export class DeviceKeyIsInvalid extends Result<UseCaseError> {
-    constructor() {
-      super(false, 'Device key is invalid')
+  export class BadRequest extends UseCaseError {
+    constructor(message: string) {
+      super({
+        error: BadRequest.name,
+        status: UseCaseCode.BadRequest,
+        message: message,
+      })
     }
   }
 
-  export class DatasourcesNotFound extends Result<UseCaseError> {
+  export class DatasourceNotFound extends UseCaseError {
     constructor(datasourceIds: string) {
-      super(false, `Couldn't found datasources by ids "${datasourceIds}"`)
+      super({
+        error: DatasourceNotFound.name,
+        status: UseCaseCode.NotFound,
+        message: `Datasource not found ids "${datasourceIds}"`,
+      })
     }
   }
 
-  export class DeviceDontMatchDatasource extends Result<UseCaseError> {
+  export class DeviceDontMatchWithDatasource extends UseCaseError {
     constructor(deviceKey: string, datasourceId: string) {
-      super(false, `Device ${deviceKey} is not included in datasource  with key ${datasourceId} devices`)
+      super({
+        message: `Device ${deviceKey} is not included in datasource ${datasourceId}`,
+        error: DeviceDontMatchWithDatasource.name,
+        status: UseCaseCode.BadRequest
+      })
     }
   }
 }

@@ -1,6 +1,7 @@
-import {ErrorsInterceptor, Logger, ServiceDatasourceRoutes} from "@iot-platforms/common";
+import {ServiceDatasourceRoutes} from "@iot-platforms/common";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
-import {Body, Controller, HttpException, Post, UseGuards, UseInterceptors} from "@nestjs/common";
+import {AppError} from "@iot-platforms/core/core/app-error";
+import {Body, Controller, Post, UseGuards} from "@nestjs/common";
 import {RepositoryManager} from "@svc-datasource/data-access";
 import {CreateConnectionUseCase} from "./createConnection";
 import {CreateConnectionDTO} from "./createConnectionDTO";
@@ -8,10 +9,7 @@ import {CreateConnectionErrors} from "./createConnectionErrors";
 
 @Controller(ServiceDatasourceRoutes.Connection.Root)
 @UseGuards(JwtAuthGuard)
-@UseInterceptors(ErrorsInterceptor)
 export class CreateConnectionController {
-  private logger = new Logger(this.constructor.name)
-
   constructor(
     private repoManager: RepositoryManager
   ){ }
@@ -32,16 +30,15 @@ export class CreateConnectionController {
       if (result.isLeft()) {
         const error = result.value
         switch (error.constructor) {
-          case CreateConnectionErrors.DatasourcesNotFound:
-          case CreateConnectionErrors.DeviceDontMatchDatasource:
-          case CreateConnectionErrors.DeviceKeyIsInvalid:
+          case CreateConnectionErrors.BadRequest:
+          case CreateConnectionErrors.DatasourceNotFound:
+          case CreateConnectionErrors.DeviceDontMatchWithDatasource:
           default:
-            throw new HttpException(error.getError(), 422)
+            return error
         }
       }
     } catch (e) {
-      this.logger.error(e)
-      throw new HttpException(e, 500)
+      return new AppError.UnexpectedError(e)
     }
   }
 }

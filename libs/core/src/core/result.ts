@@ -41,8 +41,8 @@ export class Result<T> {
     return this.value;
   }
 
-  public getError(): T {
-    return this.error as T;
+  public getError<K = T>(): K {
+    return this.error as K;
   }
 
   public static ok<U> (value?: U) : Result<U> {

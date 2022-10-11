@@ -7,7 +7,7 @@ import {StationId} from "./stationId";
 export interface ConnectionProps {
   stationId: StationId,
   datasourceIds?: DatasourceId[],
-  items?: ConnectionItems
+  items?: ConnectionItems,
 }
 
 export class Connection extends AggregateRoot<ConnectionProps> {
@@ -29,6 +29,12 @@ export class Connection extends AggregateRoot<ConnectionProps> {
 
   private constructor(props: ConnectionProps, id?: UniqueEntityID){
     super(props, id)
+  }
+
+  updateItems(items: ConnectionItems) {
+    this.props.items = items;
+    const datasourceIdMap = new Map(items.getItems().map(item => [item.datasourceId.value, item.datasourceId]));
+    this.props.datasourceIds = [...datasourceIdMap].map(item => item[1]);
   }
 
   static create(props: ConnectionProps, id?: UniqueEntityID): Result<Connection>{

@@ -1,7 +1,7 @@
-import {Guard, Result, ValueObject} from "@iot-platforms/core";
+import {Result, ValueObject} from "@iot-platforms/core";
 
 interface SystemKeyDeviceProps {
-  value: string;
+  value: string | null;
 }
 
 export class SystemDeviceKey extends ValueObject<SystemKeyDeviceProps> {
@@ -15,11 +15,6 @@ export class SystemDeviceKey extends ValueObject<SystemKeyDeviceProps> {
   }
 
   public static create (props: SystemKeyDeviceProps): Result<SystemDeviceKey> {
-    const nullGuardResult = Guard.againstNullOrUndefined(props.value, 'systemKey');
-
-    if (nullGuardResult.isFailure) return Result.fail(nullGuardResult.getError());
-
-
     return Result.ok<SystemDeviceKey>(new SystemDeviceKey(props));
   }
 }

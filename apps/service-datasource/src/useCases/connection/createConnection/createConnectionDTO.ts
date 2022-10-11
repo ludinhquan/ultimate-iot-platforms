@@ -10,6 +10,5 @@ interface ConnectionItem {
 
 export interface CreateConnectionDTO {
   stationId: string,
-  datasourceIds: string[],
   items: ConnectionItem[]
 }
