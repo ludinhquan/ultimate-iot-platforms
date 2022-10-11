@@ -7,13 +7,11 @@ content-type: application/json
 authorization: {{TOKEN}}
 
 { 
-  "stationId": "60112a674be0bf001cebe760",
-  "items": [
+  "stationId": "60112a674be0bf001cebe760s", "items": [
     {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "91ec9dbb-7420-4ea0-a370-91dab5c948cd"},
     {"deviceKey": "Dust", "systemKey": "Dust", "ratio": 2, "status": "enabled", "datasourceId": "91ec9dbb-7420-4ea0-a370-91dab5c948cd"},
     {"deviceKey": "pH", "systemKey": "Temp", "ratio": 1, "status": "enabled", "datasourceId": "2e221068-4448-4cb8-b28e-1a497de9061f"},
-    {"deviceKey": "TSS", "systemKey": "O2", "ratio": 1, "status": "enabled", "datasourceId": "2e221068-4448-4cb8-b28e-1a497de9061f"},
-    {"deviceKey": "TSS", "systemKey": null, "ratio": 1, "status": "enabled", "datasourceId": "d24b66c9-5b9c-44f9-8e29-98e6c910ce52"}
+    {"deviceKey": "TSS", "systemKey": "O2", "ratio": 1, "status": "enabled", "datasourceId": "2e221068-4448-4cb8-b28e-1a497de9061f"}, {"deviceKey": "TSS", "systemKey": null, "ratio": 1, "status": "enabled", "datasourceId": "d24b66c9-5b9c-44f9-8e29-98e6c910ce52"}
   ]
 }
 
@@ -23,7 +21,6 @@ content-type: application/json
 authorization: {{TOKEN}}
 
 {
-  "datasourceKey": "DL02_AE3743",
   "receivedAt": "2022-08-31T17:00:00.000",
   "measuringLogs": {
     "COD": {"value": 10, "statusDevice": "00"},

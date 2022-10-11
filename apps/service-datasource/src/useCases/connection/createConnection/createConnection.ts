@@ -5,7 +5,7 @@ import {CreateConnectionDTO} from "./createConnectionDTO";
 import {CreateConnectionErrors as Errors} from "./createConnectionErrors";
 
 type CreateConnectionResponse<T = any> = Either<
-  Errors.BadRequest |
+  Errors.CreateConnectionBadRequest |
   Errors.DatasourceNotFound |
   Errors.DeviceDontMatchWithDatasource,
   Result<T>
@@ -48,13 +48,13 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     const stationIdResult = StationId.create(dto.stationId);
 
     if (stationIdResult.isFailure)
-      return left(new Errors.BadRequest(stationIdResult.getError()))
+      return left(new Errors.CreateConnectionBadRequest(stationIdResult.getError()))
 
     const stationId = stationIdResult.getValue()
     const connectionOptional = await this.connectionRepo.findOne({stationId});
 
     const connectionResult = Connection.create({stationId, datasourceIds}, connectionOptional?.id)
-    if(connectionResult.isFailure) return left(new Errors.BadRequest(connectionResult.getError()))
+    if(connectionResult.isFailure) return left(new Errors.CreateConnectionBadRequest(connectionResult.getError()))
 
     return right(connectionResult)
   }
@@ -78,11 +78,11 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
       dto.items.map(item => {
         const deviceKeyResult = DeviceKey.create({value: item.deviceKey})
         if (deviceKeyResult.isFailure)
-          return left(new Errors.BadRequest(deviceKeyResult.getError()))
+          return left(new Errors.CreateConnectionBadRequest(deviceKeyResult.getError()))
 
         const systemKeyResult = SystemDeviceKey.create({value: item.systemKey})
         if (systemKeyResult.isFailure)
-          return left(new Errors.BadRequest(systemKeyResult.getError()))
+          return left(new Errors.CreateConnectionBadRequest(systemKeyResult.getError()))
 
         const datasource = datasourceMap.get(item.datasourceId);
         if (!datasource.devices.exists(item.deviceKey))
@@ -100,7 +100,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
         }, items.get(uniqueKey)?.id)
 
         if (connectionItem.isFailure)
-          return left(new Errors.BadRequest(connectionItem.getError()))
+          return left(new Errors.CreateConnectionBadRequest(connectionItem.getError()))
 
         return right(Result.ok(connectionItem.getValue()))
       })
@@ -111,7 +111,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     const list = connectionItemResults.map(item => (item.value as Result<ConnectionItem>).getValue());
     const connectionItemResult = ConnectionItems.create(list);
 
-    if (connectionItemResult.isFailure) return left(new Errors.BadRequest(connectionItemResult.getError()));
+    if (connectionItemResult.isFailure) return left(new Errors.CreateConnectionBadRequest(connectionItemResult.getError()));
 
     return right(connectionItemResult)
   }
@@ -130,7 +130,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
     Promise<ValidateDatasourceResult> {
     const datasourceIdResults = this.transformDatasourceIdsFromDTO(dto);
     if(datasourceIdResults.isFailure) 
-      return left(new Errors.BadRequest(datasourceIdResults.getError<string>()))
+      return left(new Errors.CreateConnectionBadRequest(datasourceIdResults.getError<string>()))
 
     const datasourceIds = datasourceIdResults.getValue();
     const datasources = await this.datasourceRepo.findByIds(datasourceIds);

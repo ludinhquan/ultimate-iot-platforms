@@ -1,6 +1,6 @@
 import {ServiceDatasourceRoutes} from "@iot-platforms/common";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
-import {AppError} from "@iot-platforms/core/core/app-error";
+import {UnexpectedError} from "@iot-platforms/core/errors/unexpect.error";
 import {Body, Controller, Post, UseGuards} from "@nestjs/common";
 import {RepositoryManager} from "@svc-datasource/data-access";
 import {CreateConnectionUseCase} from "./createConnection";
@@ -30,7 +30,7 @@ export class CreateConnectionController {
       if (result.isLeft()) {
         const error = result.value
         switch (error.constructor) {
-          case CreateConnectionErrors.BadRequest:
+          case CreateConnectionErrors.CreateConnectionBadRequest:
           case CreateConnectionErrors.DatasourceNotFound:
           case CreateConnectionErrors.DeviceDontMatchWithDatasource:
           default:
@@ -40,7 +40,7 @@ export class CreateConnectionController {
       const connection = result.value.getValue()
       return {connectionId: connection.connectionId.value}
     } catch (e) {
-      return new AppError.UnexpectedError(e)
+      return new UnexpectedError(e)
     }
   }
 }

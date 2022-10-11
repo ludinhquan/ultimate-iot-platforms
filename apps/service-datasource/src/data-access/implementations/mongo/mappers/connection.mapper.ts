@@ -18,6 +18,7 @@ export class ConnectionMapper {
       _id: entity.connectionId.value,
       stationId: entity.stationId.value,
       datasourceIds: entity.datasourceIds.map(item => item.value),
+      updatedAt: new Date(),
     }
   }
 }

@@ -21,9 +21,7 @@ export class CreateDatasourceController {
     const useCase = new CreateDatasourceUseCase(datasourceRepo)
 
     const result = await useCase.execute(createDto);
-    if (result.isLeft()) {
-      throw result.value
-    }
+    if (result.isLeft()) {throw result.value}
 
     return {datasourceId: result.value.datasourceId.value}
   }

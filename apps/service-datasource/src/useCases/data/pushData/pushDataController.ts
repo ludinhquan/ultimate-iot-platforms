@@ -15,13 +15,12 @@ export class PushDataController {
     @Body() data: PushDataDTO,
     @CurrentOrganization() organization: IOrganization
   ){
-    console.log(data)
-    // const event = new RawDataReceivedEvent({
-    //   organizationId: organization.id,
-    //   datasourceKey: data.datasourceKey,
-    //   receivedAt: data.receivedAt,
-    //   measuringLogs: data.measuringLogs
-    // })
-    // this.eventBus.publish(event)
+    const event = new RawDataReceivedEvent({
+      organizationId: organization.id,
+      datasourceKey: data.datasourceKey,
+      receivedAt: data.receivedAt,
+      measuringLogs: data.measuringLogs
+    })
+    this.eventBus.publish(event)
   }
 }

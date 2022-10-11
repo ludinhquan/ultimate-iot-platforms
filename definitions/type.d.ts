@@ -1,4 +1,4 @@
-interface ClassType<T> extends Function {
+interface ClassType<T = {}> extends Function {
   new(...args: any[]): T;
 }
 
