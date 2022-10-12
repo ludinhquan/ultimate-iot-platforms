@@ -35,13 +35,14 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
 
     const connectionItemResults = await this.getConnectionItems(dto, {connection, datasources})
 
-    if (connectionItemResults.isLeft()) return left(connectionItemResults.value)
+    if (connectionItemResults.isLeft()) return left(connectionItemResults.value);
 
-    const connectionItems = connectionItemResults.value.getValue()
+    const connectionItems = connectionItemResults.value.getValue();
     connection.updateItems(connectionItems);
 
-    await this.connectionRepo.save(connection)
-    return right(Result.ok(connection))
+    await this.connectionRepo.save(connection);
+    
+    return right(Result.ok(connection));
   }
 
   async getConnection(dto: CreateConnectionDTO, datasourceIds: DatasourceId[]): Promise<GetConnectionResult> {

@@ -1,1 +1,2 @@
-export * from './raw-data-received.event'
+export * from './RawDataReceivedEvent'
+export * from './ConnectionStateChangedEvent'
