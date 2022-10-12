@@ -1,6 +1,6 @@
 import {CustomError} from '@iot-platforms/core/errors/custom.error';
 import {
-  CallHandler, ExecutionContext, Injectable, NestInterceptor
+  CallHandler, ExecutionContext, HttpException, Injectable, NestInterceptor
 } from '@nestjs/common';
 import {Request, Response} from 'express';
 import {Observable} from 'rxjs';
@@ -24,15 +24,17 @@ export class HttpInterceptor implements NestInterceptor {
     response.on("finish", () => {
       const {statusCode} = response;
       const contentLength = response.get("content-length");
+      let log = this.logger.log.bind(this)
 
-      this.logger.log(
-        `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip} +${- now.getTime() + new Date().getTime()}ms`,
-      );
+      if (statusCode >= 400) log = this.logger.verbose.bind(this)
+      if (statusCode >= 500) log = this.logger.error.bind(this)
+
+      log(`${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip} +${- now.getTime() + new Date().getTime()}ms`,);
     });
     
     return handler.handle().pipe(
       map((data: any) => {
-        if(data instanceof CustomError) return data.toJson()
+        if(data instanceof CustomError) throw new HttpException(data, data.statusCode)
         return data
       }),
     );

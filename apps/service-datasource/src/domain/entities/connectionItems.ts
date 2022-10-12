@@ -18,15 +18,15 @@ export class ConnectionItems extends WatchedList<ConnectionItem>{
     return a.equals(b)
   }
 
-  static create(items?: ConnectionItem[]): Result<ConnectionItems>{
+  static create(items: ConnectionItem[] = []): Result<ConnectionItems> {
     const deviceKeys = items.map(ConnectionItems.getUniqueField);
     const systemKeys = items
       .filter(item => item.systemKey.value)
       .map(item => item.systemKey.value);
 
-    if (deviceKeys.length !== new Set(deviceKeys).size) return Result.fail('device key of one datasource are not allowed to duplicate')
-    if (systemKeys.length !== new Set(systemKeys).size) return Result.fail('system keys are not allowed to duplicate')
+    if (deviceKeys.length !== new Set(deviceKeys).size) return Result.fail(`device key of one datasource are not allowed to duplicate ${deviceKeys.join()}`)
+    if (systemKeys.length !== new Set(systemKeys).size) return Result.fail(`system keys are not allowed to duplicate ${systemKeys.join()}`)
 
-    return Result.ok(new ConnectionItems(items ?? []))
+    return Result.ok(new ConnectionItems(items))
   }
 }

@@ -37,6 +37,8 @@ export class ConnectionItemRepositoryImpl implements IConnectionItemRepository {
     const list = await this.repo.find(query);
 
     const items = list.map(ConnectionItemMapper.toDomain);
-    return ConnectionItems.create(items).getValue()
+    const result = ConnectionItems.create(items)
+    if (result.isFailure) return ConnectionItems.create().getValue()
+    return result.getValue()
   }
 }

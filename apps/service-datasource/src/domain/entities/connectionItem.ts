@@ -46,13 +46,20 @@ export class ConnectionItem extends Entity<ConnectionItemProps> {
     return this.props.ratio
   }
 
+  get isValid(): boolean{
+    const hasSystemKey = !!this.props.systemKey
+    const enabled = this.props.status === ConnectionItemStatus.Enabled
+    return hasSystemKey && enabled
+  }
+
   private constructor(props: ConnectionItemProps, id?: UniqueEntityID) {
     super(props, id)
   }
 
   static getStatus(props: ConnectionItemProps): ConnectionItemStatus {
     if (!props.systemKey.value) return ConnectionItemStatus.Disabled
-    return props.status ?? ConnectionItemStatus.Disabled
+    if (props.status) return props.status
+    return ConnectionItemStatus.Enabled
   }
 
   static create(props: ConnectionItemProps, id?: UniqueEntityID): Result<ConnectionItem>{
@@ -72,7 +79,7 @@ export class ConnectionItem extends Entity<ConnectionItemProps> {
 
     const defaultValues = {
       ...props,
-      ratio: ConnectionItem.defaultRatio,
+      ratio: props.ratio ?? ConnectionItem.defaultRatio,
       status
     }
     

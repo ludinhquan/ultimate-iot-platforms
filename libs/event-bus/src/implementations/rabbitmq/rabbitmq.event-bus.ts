@@ -42,10 +42,12 @@ export class RabbitMQEventBus implements IEventBus {
       if (!msg) return
       const jsonData = JSON.parse(msg.content.toString());
       const eventData = new eventClass(jsonData)
-      this.logger.log(
-        `[${handler.constructor.name}] Processing RabbitMQ event: ${eventClass.name} ${eventData.getAggregateId()}`);
+      const time = Date.now()
       try {
         const result = await handler.handle(eventData, jsonData)
+        this.logger.log(
+          `[${handler.constructor.name}] Processing RabbitMQ event: ${eventClass.name} ${eventData.getAggregateId()} +${Date.now() - time}`
+        );
         if (result.isSuccess) this.channel.ack(msg)
       } catch (e: any) {
         this.logger.error(e.message)

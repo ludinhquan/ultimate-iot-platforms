@@ -11,11 +11,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    let error: CustomError = new HttpError(
-      exception.message, exception.getStatus()
-    )
-
     const res = exception.getResponse() as {message: string}
+
+    let error: CustomError = res instanceof CustomError
+      ? res
+      : new HttpError(exception.message, exception.getStatus())
+
     if(exception instanceof BadRequestException) {
       error = new BadRequestError(res.message)
     }

@@ -90,7 +90,6 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
           return left(new Errors.DeviceDontMatchWithDatasource(item.deviceKey, datasource.datasourceId.value));
 
         const uniqueKey = [item.deviceKey, item.datasourceId].join();
-
         const connectionItem = ConnectionItem.create({
           connectionId: connection.connectionId,
           datasourceId: datasource.datasourceId,

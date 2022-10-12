@@ -3,6 +3,7 @@ import {IConnectionRepository, IDataSourceRepository, ISystemDeviceRepository} f
 import {Connection, ConnectionItem, Datasource, DatasourceKey, Device, DeviceKey, Devices, SystemDeviceKey, SystemDevices} from "@svc-datasource/domain";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
 import {UpdateDatasourceErrors as Errors} from "./updateDatasourceError";
+import {UpdateDatasourceMapper} from "./updateDatasourceMapper";
 
 type UpdateDatasourceResponse<T = void> = Either<
   Errors.UpdateDatasourceBadRequest,
@@ -31,20 +32,32 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
 
     const devices = await this.transformDevicesFromDTO(dto, {datasource, systemDevices})
 
+    if (devices.size === 0) {}
+
     datasource.updateDevices(devices);
 
-    await Promise.all([
-      this.datasourceRepo.save(datasource),
+    const [connections] = await Promise.all([
       this.updateConnections(datasource),
-    ])
+      this.datasourceRepo.save(datasource),
+    ]);
+
+    const event = connections.map(async item => {
+      const connectionItems = await this.connectionRepo.getItems({connectionId: item.connectionId});
+      const measuringLogs = UpdateDatasourceMapper.transformDataLogs(dto, connectionItems);
+
+      const data = {measuringLogs, receivedAt: dto.receivedAt, stationId: item.stationId.value}
+
+      console.log(data)
+    });
   }
 
   async updateConnections(datasource: Datasource){
     const list = await this.connectionRepo.findConnectionByDatasourceId(datasource.datasourceId);
-    const promises = list.map(connection => {
+    const promises = list.map(async connection => {
       const items = this.getConnectionItems(connection, datasource.devices);
       connection.addItems(items);
-      return this.connectionRepo.save(connection)
+      await this.connectionRepo.save(connection)
+      return connection
     })
 
     return Promise.all(promises)
