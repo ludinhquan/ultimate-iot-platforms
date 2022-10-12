@@ -24,10 +24,10 @@ export class HttpInterceptor implements NestInterceptor {
     response.on("finish", () => {
       const {statusCode} = response;
       const contentLength = response.get("content-length");
-      let log = this.logger.log.bind(this)
 
-      if (statusCode >= 400) log = this.logger.verbose.bind(this)
-      if (statusCode >= 500) log = this.logger.error.bind(this)
+      let log = this.logger.log.bind(this.logger)
+      if (statusCode >= 400) log = this.logger.warn.bind(this.logger)
+      if (statusCode >= 500) log = this.logger.error.bind(this.logger)
 
       log(`${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip} +${- now.getTime() + new Date().getTime()}ms`,);
     });
