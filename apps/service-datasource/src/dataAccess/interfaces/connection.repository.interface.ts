@@ -1,5 +1,5 @@
 import {IRepository} from "@iot-platforms/data-access";
-import {Connection, ConnectionId, ConnectionItems} from "../../domain";
+import {Connection, ConnectionId, ConnectionItems, DatasourceId} from "../../domain";
 
 export const ConnectionRepository = Symbol('IConnectionRepository');
 
@@ -8,4 +8,5 @@ export interface IConnectionRepository extends IRepository {
   exists(connectionId: ConnectionId): Promise<boolean>,
   findOne(connection: Partial<Connection>): Promise<Connection|null>,
   getItems(connection: Partial<Connection>): Promise<ConnectionItems>,
+  findConnectionByDatasourceId(datasourceId: DatasourceId): Promise<Connection[]>,
 }

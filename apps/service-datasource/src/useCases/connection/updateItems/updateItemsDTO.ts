@@ -1,13 +1,10 @@
 import {Type} from "class-transformer"
-import {IsNotEmpty, IsString, ValidateNested} from "class-validator"
+import {ValidateNested} from "class-validator"
 import {ConnectionItem} from '../connectionDTO'
 
-export class CreateConnectionDTO {
-  @IsNotEmpty()
-  @IsString()
-  stationId: string
-
+export class UpdateItemsDTO {
   @ValidateNested({each: true})
   @Type(() => ConnectionItem)
   items: ConnectionItem[]
 }
+

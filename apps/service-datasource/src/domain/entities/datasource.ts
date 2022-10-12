@@ -35,7 +35,6 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
     return this.props.totalDevice
   }
   
-
   private constructor(props: DatasourceProps, id?: UniqueEntityID){
     super(props, id)
   }
@@ -64,6 +63,7 @@ export class Datasource extends AggregateRoot<DatasourceProps> {
       type: props.type ? props.type : Datasource.defaultType
     }
 
-    return Result.ok(new Datasource(defaultValues, id))
+    const datasourceId = DatasourceId.create(id).getValue().id
+    return Result.ok(new Datasource(defaultValues, datasourceId))
   }
 }

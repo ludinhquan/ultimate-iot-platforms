@@ -1,5 +1,5 @@
-import {BadRequestError, CustomError, HttpError} from '@iot-platforms/core/errors';
-import {ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpException} from '@nestjs/common';
+import {BadRequestError, CustomError, HttpError, UnauthorizedError} from '@iot-platforms/core/errors';
+import {ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpException, UnauthorizedException} from '@nestjs/common';
 import {Response} from 'express';
 import {Logger} from '../logger';
 
@@ -15,9 +15,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception.message, exception.getStatus()
     )
 
+    const res = exception.getResponse() as {message: string}
     if(exception instanceof BadRequestException) {
-      const res = exception.getResponse() as {message: string}
       error = new BadRequestError(res.message)
+    }
+
+    if(exception instanceof UnauthorizedException) {
+      error = new UnauthorizedError(res.message)
     }
 
     this.logger.error(exception.message, exception.getResponse())

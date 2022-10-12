@@ -53,6 +53,7 @@ export class Connection extends AggregateRoot<ConnectionProps> {
       items: props.items ?? ConnectionItems.create([]).getValue()
     };
 
-    return Result.ok(new Connection(defaultValues, id))
+    const connectionId = ConnectionId.create(id).getValue().id
+    return Result.ok(new Connection(defaultValues, connectionId))
   }
 }

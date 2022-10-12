@@ -33,15 +33,21 @@ export class RawDataReceivedEventHandler implements IEventHandler<RawDataReceive
   async handle(event: RawDataReceivedEvent) {
     try {
       const tentantId = event.getOrganizationId()
-      const [datasourceRepo, systemDeviceRepo] = await Promise.all([
+      const [datasourceRepo, connectionRepo, systemDeviceRepo] = await Promise.all([
         this.repoManager.datasourceRepo(tentantId),
+        this.repoManager.connectionRepo(tentantId),
         this.repoManager.systemDeviceRepo(tentantId)
       ]);
 
-      const useCase = new UpdateDatasourceUseCase(datasourceRepo, systemDeviceRepo)
+      const useCase = new UpdateDatasourceUseCase(
+        datasourceRepo, 
+        connectionRepo, 
+        systemDeviceRepo
+      )
       const dto = this.transformEventToDTO(event)
       const result = await useCase.execute(dto)
 
+      console.log(result)
       if (result && result.isLeft()) {
         this.logger.error(result.value.toJson())
         return Result.ok()

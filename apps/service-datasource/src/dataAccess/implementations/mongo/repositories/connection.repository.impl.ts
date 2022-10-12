@@ -1,5 +1,5 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
-import {Connection, ConnectionId, ConnectionItems} from "@svc-datasource/domain";
+import {Connection, ConnectionId, ConnectionItem, ConnectionItems, DatasourceId} from "@svc-datasource/domain";
 import {MongoRepository} from "typeorm";
 import {IConnectionItemRepository, IConnectionRepository} from "../../../interfaces";
 import {ConnectionOrmEntity} from "../entities";
@@ -49,7 +49,15 @@ export class ConnectionRepositoryImpl implements IConnectionRepository {
     return ConnectionMapper.toDomain(result);
   }
 
-  async getItems(connectionId: ConnectionId): Promise<ConnectionItems> {
-    return this.itemRepo.find({connectionId})
+
+  async findConnectionByDatasourceId(datasourceId: DatasourceId): Promise<Connection[]> {
+    const where = {datasourceIds: {$elemMatch: {$eq: datasourceId.value}}}
+    const list = await this.repo.findBy(where)
+
+    return list.map(ConnectionMapper.toDomain)
+  }
+
+  async getItems(connection: Partial<Connection>): Promise<ConnectionItems> {
+    return this.itemRepo.find({connectionId: connection.connectionId})
   }
 }

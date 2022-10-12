@@ -9,7 +9,7 @@ export class ConnectionItemMapper {
         datasourceId: DatasourceId.create(new UniqueEntityID(ormEntity.datasourceId)).getValue(),
         connectionId: ConnectionId.create(new UniqueEntityID(ormEntity.connectionId)).getValue(),
         deviceKey: DeviceKey.create({value: ormEntity.deviceKey}).getValue(),
-        systemKey: ormEntity.systemKey ? SystemDeviceKey.create({value: ormEntity.systemKey}).getValue() : null,
+        systemKey: SystemDeviceKey.create({value: ormEntity.systemKey}).getValue(),
         status: ormEntity.status,
         ratio: ormEntity.ratio,
       },
@@ -23,7 +23,7 @@ export class ConnectionItemMapper {
       datasourceId: entity.datasourceId.value,
       connectionId: entity.connectionId.value,
       deviceKey: entity.deviceKey.value,
-      systemKey: entity.systemKey ? entity.systemKey.value : null,
+      systemKey: entity.systemKey.value,
       status: entity.status,
       ratio: entity.ratio
     }

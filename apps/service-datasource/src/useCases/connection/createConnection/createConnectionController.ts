@@ -40,7 +40,7 @@ export class CreateConnectionController {
       const connection = result.value.getValue()
       return {connectionId: connection.connectionId.value}
     } catch (e) {
-      return new UnexpectedError(e)
+      return new UnexpectedError(e.message, e.stack)
     }
   }
 }

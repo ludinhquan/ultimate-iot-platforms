@@ -7,11 +7,11 @@ import {SystemDeviceKey} from "./systemDeviceKey";
 export interface DeviceProps {
   key: DeviceKey,
   datasourceId: DatasourceId,
-  systemKey?: SystemDeviceKey | null
+  systemKey?: SystemDeviceKey
 }
 
 export class Device extends Entity<DeviceProps> {
-  get deviceId(): DeviceId{
+  get deviceId(): DeviceId {
     return DeviceId.create(this.id).getValue()
   }
 
@@ -27,7 +27,7 @@ export class Device extends Entity<DeviceProps> {
     return this.props.systemKey
   }
 
-  private constructor(props: DeviceProps, id?: UniqueEntityID){
+  private constructor(props: DeviceProps, id: UniqueEntityID){
     super(props, id)
   }
 
@@ -38,12 +38,14 @@ export class Device extends Entity<DeviceProps> {
 
   static create(props: DeviceProps, id?: UniqueEntityID): Result<Device>{
     const guardResult = Guard.againstNullOrUndefinedBulk([
-      {argument: props.key, argumentName: 'datasourceId'},
+      {argument: props.datasourceId, argumentName: 'datasourceId'},
       {argument: props.key, argumentName: 'deviceKey'},
     ])
 
     if(guardResult.isFailure) return Result.fail(guardResult.getError())
+    if (!props.systemKey) props.systemKey = SystemDeviceKey.create({value: null}).getValue()
 
-    return Result.ok(new Device(props, id))
+    const deviceId = DeviceId.create(id).getValue().id
+    return Result.ok(new Device(props, deviceId))
   }
 }

@@ -3,6 +3,7 @@ type MapItems<T> = Map<Field, T>
 
 export abstract class WatchedList<T> {
   private items: MapItems<T>
+  private new: MapItems<T> = new Map()
  
   get size() {
     return this.items.size
@@ -27,8 +28,13 @@ export abstract class WatchedList<T> {
     return this.mapToArray(this.items)
   }
 
+  public getNewItems (): T[] {
+    return this.mapToArray(this.new)
+  }
+
   public add(item: T): void {
     this.items.set(this.getUniqueField(item), item)
+    this.new.set(this.getUniqueField(item), item)
   }
 
   public remove(item: T): void {

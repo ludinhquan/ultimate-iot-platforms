@@ -51,8 +51,8 @@ export class ConnectionItem extends Entity<ConnectionItemProps> {
   }
 
   static getStatus(props: ConnectionItemProps): ConnectionItemStatus {
-    if (!props.systemKey) return ConnectionItemStatus.Disabled
-    return props.status
+    if (!props.systemKey.value) return ConnectionItemStatus.Disabled
+    return props.status ?? ConnectionItemStatus.Disabled
   }
 
   static create(props: ConnectionItemProps, id?: UniqueEntityID): Result<ConnectionItem>{
@@ -76,6 +76,7 @@ export class ConnectionItem extends Entity<ConnectionItemProps> {
       status
     }
     
-    return Result.ok(new ConnectionItem(defaultValues, id))
+    const connectionItemId = ConnectionItemId.create(id).getValue().id
+    return Result.ok(new ConnectionItem(defaultValues, connectionItemId))
   }
 }
