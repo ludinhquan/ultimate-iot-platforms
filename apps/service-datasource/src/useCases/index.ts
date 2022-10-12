@@ -1,3 +1,4 @@
-export * from './data'
-export * from './datasource'
-export * from './connection'
+export * from './createConnection'
+export * from './updateDatasource'
+export * from './updateItems'
+export * from './pushData'
