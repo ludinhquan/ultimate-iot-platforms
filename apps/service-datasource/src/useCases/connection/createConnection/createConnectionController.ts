@@ -2,7 +2,7 @@ import {ServiceDatasourceRoutes} from "@iot-platforms/common";
 import {CurrentOrganization, JwtAuthGuard} from "@iot-platforms/core";
 import {UnexpectedError} from "@iot-platforms/core/errors/unexpect.error";
 import {Body, Controller, Post, UseGuards} from "@nestjs/common";
-import {RepositoryManager} from "@svc-datasource/data-access";
+import {RepositoryManager} from "@svc-datasource/dataAccess";
 import {CreateConnectionUseCase} from "./createConnection";
 import {CreateConnectionDTO} from "./createConnectionDTO";
 import {CreateConnectionErrors} from "./createConnectionErrors";
