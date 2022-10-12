@@ -9,9 +9,9 @@ authorization: {{TOKEN}}
 { 
   "stationId": "626917f6afef13001dee67b8",
   "items": [
-    {"deviceKey": "H2S", "systemKey": "H2S", "ratio": 1, "status": "enabled", "datasourceId": "99ad4483-d7df-4b78-b9fc-76a0126af17d"},
-    {"deviceKey": "TSS", "systemKey": null, "ratio": 1, "status": "enabled", "datasourceId": "99ad4483-d7df-4b78-b9fc-76a0126af17d"},
-    {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "99ad4483-d7df-4b78-b9fc-76a0126af17d"}
+    {"deviceKey": "H2S", "systemKey": "H2S", "ratio": 1, "status": "enabled", "datasourceId": "81ff1020-2067-4fe3-9635-6811fcc43c29"},
+    {"deviceKey": "TSS", "systemKey": null, "ratio": 1, "status": "enabled", "datasourceId": "81ff1020-2067-4fe3-9635-6811fcc43c29"},
+    {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "81ff1020-2067-4fe3-9635-6811fcc43c29"}
   ]
 }
 
@@ -31,7 +31,10 @@ authorization: {{TOKEN}}
     "H2S": {"value": 10, "statusDevice": "02"},
     "Flow": {"value": 10, "statusDevice": "02"},
     "Amoni": {"value": 10, "statusDevice": "02"},
-    "Total": {"value": 10, "statusDevice": "02"}
+    "Total": {"value": 10, "statusDevice": "02"},
+    "Amoniac": {"value": 10, "statusDevice": "02"},
+    "Temp": {"value": 10, "statusDevice": "02"},
+    "Temp": {"value": 11, "statusDevice": "02"}
   }
 }
 

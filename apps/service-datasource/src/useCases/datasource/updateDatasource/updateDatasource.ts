@@ -1,6 +1,6 @@
 import {Either, left, Result, UseCase} from "@iot-platforms/core";
 import {IConnectionRepository, IDataSourceRepository, ISystemDeviceRepository} from "@svc-datasource/dataAccess";
-import {Connection, ConnectionItem, ConnectionItems, Datasource, DatasourceKey, DatasourceService, Device, DeviceKey, Devices} from "@svc-datasource/domain";
+import {Connection, ConnectionItem, Datasource, DatasourceKey, Device, DeviceKey, Devices, SystemDeviceKey, SystemDevices} from "@svc-datasource/domain";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
 import {UpdateDatasourceErrors as Errors} from "./updateDatasourceError";
 
@@ -10,8 +10,6 @@ type UpdateDatasourceResponse<T = void> = Either<
 >
 
 export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, UpdateDatasourceResponse> {
-  private datasourceService = new DatasourceService()
-
   constructor(
     private datasourceRepo: IDataSourceRepository,
     private connectionRepo: IConnectionRepository,
@@ -31,9 +29,8 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
       this.systemRepo.findSystemDevicesByKeys(deviceKeys),
     ]);
 
-    const devices = await this.getNewDevices(datasource, deviceKeys)
+    const devices = await this.transformDevicesFromDTO(dto, {datasource, systemDevices})
 
-    this.datasourceService.mappingSystemKey(devices, systemDevices);
     datasource.updateDevices(devices);
 
     await Promise.all([
@@ -46,7 +43,7 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
     const list = await this.connectionRepo.findConnectionByDatasourceId(datasource.datasourceId);
     const promises = list.map(connection => {
       const items = this.getConnectionItems(connection, datasource.devices);
-      connection.updateItems(items);
+      connection.addItems(items);
       return this.connectionRepo.save(connection)
     })
 
@@ -55,14 +52,16 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
 
   getConnectionItems(connection: Connection, devices: Devices) {
     const list = devices.getItems().map(device => {
-      return ConnectionItem.create({
+      const itemResult = ConnectionItem.create({
         connectionId: connection.connectionId,
         datasourceId: device.datasourceId,
         deviceKey: device.key,
         systemKey: device.systemKey
-      }).getValue()
+      })
+
+      return itemResult.getValue()
     })
-    return ConnectionItems.create(list).getValue()
+    return list
   }
 
   async getDatasource(datasourceKey: DatasourceKey){
@@ -71,17 +70,27 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
     return datasource
   }
 
-  async getNewDevices(datasource: Datasource, deviceKeys: string[]): Promise<Devices> {
+  async transformDevicesFromDTO(
+    dto: UpdateDatasourceDTO, 
+    params: {datasource: Datasource, systemDevices: SystemDevices}
+  ): Promise<Devices> {
+    const {datasource, systemDevices} = params
     const datasourceId = datasource.datasourceId
     const oldDevices = await this.datasourceRepo.getDevicesByDatasourceId(datasourceId);
 
-    const listDeviceKeyOrError = deviceKeys
+    const listDeviceKeyOrError = Object.keys(dto.measuringLogs)
       .filter(key => !oldDevices.exists(key))
       .map(key => DeviceKey.create({value: key}))
       .filter(deviceKey => deviceKey.isSuccess)
 
     const listDevice = listDeviceKeyOrError.map(keyResult => {
-      const deviceResult = Device.create({key: keyResult.getValue(), datasourceId})
+      const key = keyResult.getValue()
+      const systemKey = systemDevices.get(key.value)
+      const deviceResult = Device.create({
+        datasourceId,
+        key: keyResult.getValue(),
+        systemKey: SystemDeviceKey.create({value: systemKey?.key.value}).getValue()
+      })
       return deviceResult.getValue()
     })
 

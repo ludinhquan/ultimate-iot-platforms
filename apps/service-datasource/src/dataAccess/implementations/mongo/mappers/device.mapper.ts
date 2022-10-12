@@ -8,7 +8,7 @@ export class DeviceMapper {
       {
         key: DeviceKey.create({value: ormEntity.key}).getValue(),
         datasourceId: DatasourceId.create(new UniqueEntityID(ormEntity.datasourceId)).getValue(),
-        systemKey: ormEntity.systemKey ? SystemDeviceKey.create({value: ormEntity.systemKey}).getValue() : null,
+        systemKey: SystemDeviceKey.create({value: ormEntity.systemKey}).getValue(),
       },
       new UniqueEntityID(ormEntity._id))
       .getValue()
@@ -19,7 +19,7 @@ export class DeviceMapper {
       _id: entity.deviceId.value,
       datasourceId: entity.datasourceId.value,
       key: entity.key.value,
-      systemKey: entity.systemKey ? entity.systemKey.value : null,
+      systemKey: entity.systemKey.value,
     }
   }
 }

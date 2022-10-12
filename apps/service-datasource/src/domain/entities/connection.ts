@@ -1,5 +1,6 @@
 import {AggregateRoot, Guard, Result, UniqueEntityID} from "@iot-platforms/core";
 import {ConnectionId} from "./connectionId";
+import {ConnectionItem} from "./connectionItem";
 import {ConnectionItems} from "./connectionItems";
 import {DatasourceId} from "./datasourceId";
 import {StationId} from "./stationId";
@@ -35,6 +36,10 @@ export class Connection extends AggregateRoot<ConnectionProps> {
     this.props.items = items;
     const datasourceIdMap = new Map(items.getItems().map(item => [item.datasourceId.value, item.datasourceId]));
     this.props.datasourceIds = [...datasourceIdMap].map(item => item[1]);
+  }
+
+  addItems(items: ConnectionItem[]) {
+    items.map(item => this.props.items.add(item));
   }
 
   static create(props: ConnectionProps, id?: UniqueEntityID): Result<Connection>{

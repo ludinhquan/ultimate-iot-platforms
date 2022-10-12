@@ -10,7 +10,7 @@ export interface ConnectionItemProps {
   datasourceId: DatasourceId,
   connectionId: ConnectionId,
   deviceKey: DeviceKey,
-  systemKey?: SystemDeviceKey,
+  systemKey: SystemDeviceKey,
   status?: ConnectionItemStatus
   ratio?: number,
 }
