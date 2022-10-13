@@ -93,6 +93,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/contracts/tsconfig.lib.json"
       }
+    },
+    "service-datalog": {
+      "type": "application",
+      "root": "apps/service-datalog",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-datalog/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-datalog/tsconfig.app.json"
+      }
     }
   }
 }
