@@ -46,13 +46,3 @@ authorization: {{TOKEN}}
     "datasourceKey": "DL01_AE3745",
     "devices": ["Dust", "COD", "TSS"]
 }
-
-### update device for datasources
-POST {{HOST_DEV}}/datasources/add-devices
-content-type: application/json
-authorization: {{TOKEN}}
-
-{
-    "datasourceKey": "DL01_AE3745",
-    "devices": ["TSS", "COD", "TSS"]
-}

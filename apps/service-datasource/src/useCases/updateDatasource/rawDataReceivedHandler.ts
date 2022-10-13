@@ -1,6 +1,6 @@
 import {MeasuringLogs, StatusDevice} from "@iot-platforms/contracts";
 import {Result} from "@iot-platforms/core";
-import {EventBusHandler, IEventHandler, RawDataReceivedEvent} from "@iot-platforms/event-bus";
+import {EventBusHandler, EventBusToken, IEventBus, IEventHandler, RawDataReceivedEvent} from "@iot-platforms/event-bus";
 import {Inject, Logger} from "@nestjs/common";
 import {IRepositoryManager, RepositoryManager} from "@svc-datasource/dataAccess";
 import {UpdateDatasourceUseCase} from "./updateDatasource";
@@ -12,10 +12,12 @@ export class RawDataReceivedEventHandler implements IEventHandler<RawDataReceive
 
   constructor(
     @Inject(RepositoryManager) private repoManager: IRepositoryManager,
+    @Inject(EventBusToken) private eventBus: IEventBus
   ) {}
 
   transformEventToDTO(event: RawDataReceivedEvent): UpdateDatasourceDTO{
     return {
+      organizationId: event.getOrganizationId(),
       datasourceKey: event.datasourceKey,
       receivedAt: event.receivedAt,
       measuringLogs: Object.keys(event.measuringLogs)
@@ -43,7 +45,8 @@ export class RawDataReceivedEventHandler implements IEventHandler<RawDataReceive
       const useCase = new UpdateDatasourceUseCase(
         datasourceRepo, 
         connectionRepo, 
-        systemDeviceRepo
+        systemDeviceRepo,
+        this.eventBus
       )
       const dto = this.transformEventToDTO(event)
       const result = await useCase.execute(dto)

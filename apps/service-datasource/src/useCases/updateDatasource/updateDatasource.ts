@@ -1,4 +1,5 @@
 import {Either, left, Result, UseCase} from "@iot-platforms/core";
+import {DataReceivedEvent, IEventBus} from "@iot-platforms/event-bus";
 import {FindConnectionParams, IConnectionRepository, IDataSourceRepository, ISystemDeviceRepository} from "@svc-datasource/dataAccess";
 import {Connection, ConnectionItem, Datasource, DatasourceKey, Device, DeviceKey, Devices, SystemDeviceKey, SystemDevices} from "@svc-datasource/domain";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
@@ -15,6 +16,7 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
     private datasourceRepo: IDataSourceRepository,
     private connectionRepo: IConnectionRepository,
     private systemRepo: ISystemDeviceRepository,
+    private eventBus: IEventBus
   ){}
 
   async execute(dto: UpdateDatasourceDTO): Promise<UpdateDatasourceResponse> {
@@ -41,9 +43,17 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
       this.datasourceRepo.save(datasource),
     ]);
 
-    const event = connections.map(async connection => {
+    connections.map(async connection => {
       const measuringLogs = UpdateDatasourceMapper.transformDataLogs(dto, connection.items);
-      const data = {measuringLogs, receivedAt: dto.receivedAt, stationId: connection.stationId.value};
+      const data = {
+        organizationId: dto.organizationId,
+        stationId: connection.stationId.value,
+        receivedAt: dto.receivedAt,
+        measuringLogs,
+      };
+      const event = new DataReceivedEvent(data)
+
+      this.eventBus.publish(event)
     });
   }
 
