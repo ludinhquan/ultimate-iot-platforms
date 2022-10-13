@@ -16,6 +16,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
   app.useGlobalFilters(new HttpExceptionFilter())
   app.useGlobalInterceptors(new HttpInterceptor())
-  await app.listen(4000);
+
+  await app.listen(process.env.SERVICE_DATASOURCE);
 }
 bootstrap();
