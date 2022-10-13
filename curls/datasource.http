@@ -1,35 +1,42 @@
 ## TODO 
 # - Update connection when update datasource
 
+GET {{HOST_DEV}}/connections?connectionId=6d263438-6d9c-4376-a3a8-c41e61c40738
+content-type: application/json
+authorization: {{TOKEN}}
+
 ### create connection
 POST {{HOST_DEV}}/connections
 content-type: application/json
 authorization: {{TOKEN}}
 
 { 
-  "stationId": "6012627206a466001c33ecae",
+  "stationId": "63354ca6dfc9f5001d16b1c5", 
   "items": [
-    {"deviceKey": "TSS", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "81ff1020-2067-4fe3-9635-6811fcc43c29"},
-    {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "81ff1020-2067-4fe3-9635-6811fcc43c29"},
-    {"deviceKey": "TSS", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "d35ea9ff-fc34-460f-aab7-2db084ea9506"},
-    {"deviceKey": "FLOW_IN", "systemKey": "FLOW_IN", "ratio": 1, "status": "enabled", "datasourceId": "d35ea9ff-fc34-460f-aab7-2db084ea9506"} ]
+    {"deviceKey": "COD", "systemKey": "COD", "ratio": 1, "status": "enabled", "datasourceId": "4f598628-1dfc-4cab-9b58-2735388b0d28"},
+    {"deviceKey": "pH", "systemKey": "pH", "ratio": 1, "status": "enabled", "datasourceId": "4f598628-1dfc-4cab-9b58-2735388b0d28"},
+    {"deviceKey": "TSS", "systemKey": "TSS", "ratio": 1, "status": "enabled", "datasourceId": "83b77ac8-1a4e-4aeb-8b22-c1f2fe905e49"},
+    {"deviceKey": "FLOW_IN", "systemKey": "FLOW_IN", "ratio": 1, "status": "enabled", "datasourceId": "83b77ac8-1a4e-4aeb-8b22-c1f2fe905e49"} ]
 }
 
 ### fake push data
 POST {{HOST_DEV}}/push-data
 content-type: application/json
-authorization: {{token}}
+authorization: {{TOKEN}}
 
 {
-  "datasourceKey": "DL02_AE3743",
+  "datasourceKey": "DL03_AE3743",
   "receivedAt": "2022-08-31T17:00:00.000",
-  "measuringLogs": {
+  "measuringLogs": { 
     "COD": {"value": 10, "statusDevice": "00"},
     "TSS": {"value": 10, "statusDevice": "01"},
     "pH": {"value": 10, "statusDevice": "01"},
-    "FLOW_IN": {"value": 12, "statusDevice": "02"} }
+    "FLOW_IN": {"value": 12, "statusDevice": "02"},
+    "FLOW_OUT": {"value": 12, "statusDevice": "02"},
+    "FLOW_TOTAL": {"value": 12, "statusDevice": "02"} 
+  }
 }
-
+ 
 ### create datasources
 POST {{HOST_DEV}}/datasources
 content-type: application/json

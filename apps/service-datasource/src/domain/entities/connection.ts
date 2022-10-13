@@ -38,8 +38,12 @@ export class Connection extends AggregateRoot<ConnectionProps> {
     this.props.datasourceIds = [...datasourceIdMap].map(item => item[1]);
   }
 
-  addItems(items: ConnectionItem[]) {
-    items.map(item => this.props.items.add(item));
+  addItems(item: ConnectionItem | ConnectionItem[]) {
+    const items = Array.isArray(item) ? item : [item]
+    items.map(item => {
+      const uniqueField = ConnectionItems.getUniqueField(item)
+      if (!this.props.items.exists(uniqueField)) this.props.items.add(item)
+    });
   }
 
   static create(props: ConnectionProps, id?: UniqueEntityID): Result<Connection>{

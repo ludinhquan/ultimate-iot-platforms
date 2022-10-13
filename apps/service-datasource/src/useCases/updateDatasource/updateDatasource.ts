@@ -1,5 +1,5 @@
 import {Either, left, Result, UseCase} from "@iot-platforms/core";
-import {IConnectionRepository, IDataSourceRepository, ISystemDeviceRepository} from "@svc-datasource/dataAccess";
+import {FindConnectionParams, IConnectionRepository, IDataSourceRepository, ISystemDeviceRepository} from "@svc-datasource/dataAccess";
 import {Connection, ConnectionItem, Datasource, DatasourceKey, Device, DeviceKey, Devices, SystemDeviceKey, SystemDevices} from "@svc-datasource/domain";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
 import {UpdateDatasourceErrors as Errors} from "./updateDatasourceError";
@@ -41,21 +41,22 @@ export class UpdateDatasourceUseCase implements UseCase<UpdateDatasourceDTO, Upd
       this.datasourceRepo.save(datasource),
     ]);
 
-    const event = connections.map(async item => {
-      const connectionItems = await this.connectionRepo.getItems({connectionId: item.connectionId});
-      const measuringLogs = UpdateDatasourceMapper.transformDataLogs(dto, connectionItems);
-
-      const data = {measuringLogs, receivedAt: dto.receivedAt, stationId: item.stationId.value}
-
-      console.log(data)
+    const event = connections.map(async connection => {
+      const measuringLogs = UpdateDatasourceMapper.transformDataLogs(dto, connection.items);
+      const data = {measuringLogs, receivedAt: dto.receivedAt, stationId: connection.stationId.value};
     });
   }
 
   async updateConnections(datasource: Datasource){
-    const list = await this.connectionRepo.findConnectionByDatasourceId(datasource.datasourceId);
+    const queryParams: FindConnectionParams = {
+      where: {datasourceId: datasource.datasourceId},
+      relations: ['connection-items'] 
+    }
+    const list = await this.connectionRepo.find(queryParams);
+    
     const promises = list.map(async connection => {
-      const items = this.getConnectionItems(connection, datasource.devices);
-      connection.addItems(items);
+      const newItems = this.getConnectionItems(connection, datasource.devices);
+      connection.addItems(newItems);
       await this.connectionRepo.save(connection)
       return connection
     })

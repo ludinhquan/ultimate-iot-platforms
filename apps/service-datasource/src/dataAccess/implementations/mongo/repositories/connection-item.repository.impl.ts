@@ -2,7 +2,7 @@ import {removeUndefinedProps} from "@iot-platforms/common";
 import {Logger} from "@nestjs/common";
 import {ConnectionId, ConnectionItem, ConnectionItems} from "@svc-datasource/domain";
 import {MongoRepository} from "typeorm";
-import {IConnectionItemRepository} from "../../../interfaces";
+import {FindConnectionItemParams, IConnectionItemRepository} from "../../../interfaces";
 import {ConnectionItemOrmEntity} from "../entities";
 import {ConnectionItemMapper} from "../mappers";
 
@@ -16,6 +16,7 @@ export class ConnectionItemRepositoryImpl implements IConnectionItemRepository {
   private buildBasicQuery(item: Partial<ConnectionItem>){
     const query = removeUndefinedProps({
       connectionId: item.connectionId?.value,
+      datasourceId: item.datasourceId?.value,
     })
     return query
   }
@@ -31,14 +32,13 @@ export class ConnectionItemRepositoryImpl implements IConnectionItemRepository {
     return {total: result.length}
   }
 
-  async find(connectionId: ConnectionId): Promise<ConnectionItems> {
-    const query = this.buildBasicQuery({connectionId})
+  async find(params: FindConnectionItemParams): Promise<ConnectionItem[]> {
+    const {where: {datasourceId, connectionId}} = params
+    const query = this.buildBasicQuery({datasourceId, connectionId})
 
     const list = await this.repo.find(query);
 
     const items = list.map(ConnectionItemMapper.toDomain);
-    const result = ConnectionItems.create(items)
-    if (result.isFailure) return ConnectionItems.create().getValue()
-    return result.getValue()
+    return items
   }
 }

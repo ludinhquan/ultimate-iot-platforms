@@ -4,12 +4,14 @@ import {Module} from "@nestjs/common";
 import {DataAccessModule} from "./dataAccess";
 import {
   CreateConnectionController,
+  GetConnectionController,
+  RawDataReceivedEventHandler,
   PushDataController, 
-  RawDataReceivedEventHandler
 } from "./useCases";
 
 const datasourceControllers = [
-  CreateConnectionController
+  CreateConnectionController,
+  GetConnectionController
 ]
 
 const fakeDataController = [

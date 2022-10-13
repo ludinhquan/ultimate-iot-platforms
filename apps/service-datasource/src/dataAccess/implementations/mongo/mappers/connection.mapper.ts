@@ -1,6 +1,7 @@
 import {UniqueEntityID} from "@iot-platforms/core";
 import {Connection, DatasourceId, StationId} from "@svc-datasource/domain";
-import {ConnectionOrmEntity} from "../entities";
+import {ConnectionItemOrmEntity, ConnectionOrmEntity} from "../entities";
+import {ConnectionItemMapper} from "./connection-item.mapper";
 
 export class ConnectionMapper {
   static toDomain(ormEntity: ConnectionOrmEntity): Connection {
@@ -13,11 +14,12 @@ export class ConnectionMapper {
       .getValue()
   }
 
-  static toPersistence(entity: Connection): ConnectionOrmEntity {
+  static toPersistence(entity: Connection): ConnectionOrmEntity & {items?: ConnectionItemOrmEntity[]} {
     return {
       _id: entity.connectionId.value,
       stationId: entity.stationId.value,
       datasourceIds: entity.datasourceIds.map(item => item.value),
+      items: entity.items.getItems().map(ConnectionItemMapper.toPersistence),
       updatedAt: new Date(),
     }
   }

@@ -71,7 +71,7 @@ export class CreateConnectionUseCase implements UseCase<CreateConnectionDTO, Cre
   ): Promise<ValidateItemsResult> {
 
     const {datasources, connection} = params
-    const items = await this.connectionRepo.getItems({connectionId: connection.connectionId})
+    const items = await this.connectionRepo.getConnectionItems({connectionId: connection.connectionId})
 
     const datasourceMap = new Map(datasources.map(datasource => [datasource.datasourceId.value, datasource]));
 

@@ -1,7 +1,7 @@
 import {removeUndefinedProps} from "@iot-platforms/common";
-import {Connection, ConnectionId, ConnectionItem, ConnectionItems, DatasourceId} from "@svc-datasource/domain";
+import {Connection, ConnectionId, ConnectionItems} from "@svc-datasource/domain";
 import {MongoRepository} from "typeorm";
-import {IConnectionItemRepository, IConnectionRepository} from "../../../interfaces";
+import {FindConnectionParams, IConnectionItemRepository, IConnectionRepository} from "../../../interfaces";
 import {ConnectionOrmEntity} from "../entities";
 import {ConnectionMapper} from "../mappers/connection.mapper";
 
@@ -50,14 +50,43 @@ export class ConnectionRepositoryImpl implements IConnectionRepository {
   }
 
 
-  async findConnectionByDatasourceId(datasourceId: DatasourceId): Promise<Connection[]> {
-    const where = {datasourceIds: {$elemMatch: {$eq: datasourceId.value}}}
-    const list = await this.repo.findBy(where)
+  async find(params: FindConnectionParams): Promise<Connection[]> {
+    const {where, relations} = params
+    const {datasourceId, connectionId} = where
 
-    return list.map(ConnectionMapper.toDomain)
+    const queryConnection: Record<string, object> = {};
+    if (datasourceId) queryConnection.datasourceIds = {$elemMatch: {$eq: datasourceId.value}}
+    if (connectionId) queryConnection._id = {$eq: connectionId.value}
+
+    const queryConnectionItems: Record<string, object> = {};
+    if (datasourceId) queryConnectionItems.datasourceId = datasourceId;
+    if (connectionId) queryConnectionItems.connectionId = connectionId;
+
+    const getConnectionItemPromises = () => {
+      if (relations.includes('connection-items')) return this.itemRepo.find({where: queryConnectionItems});
+      return Promise.resolve([])
+    }
+
+    const [list, connectionItems] = await Promise.all([
+      this.repo.findBy(queryConnection),
+      getConnectionItemPromises()
+    ])
+
+    const results = list.map((entity) => {
+      const connection = ConnectionMapper.toDomain(entity)
+      const items = connectionItems
+        .filter(item => item.connectionId.equals(connection.connectionId))
+      connection.updateItems(ConnectionItems.create(items).getValue())
+
+      return connection
+    })
+
+    return results
   }
 
-  async getItems(connection: Partial<Connection>): Promise<ConnectionItems> {
-    return this.itemRepo.find({connectionId: connection.connectionId})
+  async getConnectionItems(params: Partial<{connectionId: ConnectionId}>): Promise<ConnectionItems> {
+    const {connectionId}= params
+    const list = await this.itemRepo.find({where: {connectionId}})
+    return ConnectionItems.create(list).getValue()
   }
 }
