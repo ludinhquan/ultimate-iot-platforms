@@ -1,5 +1,5 @@
 import {ServiceRegistryModule} from "@iot-platforms/core";
-import {EventBusModule} from "@iot-platforms/event-bus";
+import {EventBusModule, RawDataReceivedEvent} from "@iot-platforms/event-bus";
 import {Module} from "@nestjs/common";
 import {DataAccessModule} from "./dataAccess";
 import {
@@ -26,7 +26,11 @@ const handlers = [
   imports: [
     ServiceRegistryModule,
     DataAccessModule,
-    EventBusModule
+    EventBusModule.register({
+      name: 'ServiceDatasource',
+      events: [RawDataReceivedEvent],
+      handlers: [RawDataReceivedEventHandler]
+    })
   ],
   providers: [
     ...handlers

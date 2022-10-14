@@ -12,9 +12,14 @@ export class KafkaEventBus implements IEventBus {
   private producer: Producer
   private consumerMap: Map<string, Consumer> = new Map()
 
+  private readonly eventRegisteredSet: Set<string>
+  private readonly handlerRegisteredSet: Set<string>
+
   private manager = new EventBusSubscriptionsManager()
 
   constructor(private config: KafkaOptions) {
+    this.eventRegisteredSet = new Set((this.config.events ?? []).map(event => event.name));
+    this.handlerRegisteredSet = new Set((this.config.handlers ?? []).map(handler => handler.name));
     this.setup()
   }
 
@@ -40,6 +45,10 @@ export class KafkaEventBus implements IEventBus {
   }
 
   async publish(event: IntegrationEvent) {
+    const eventName = event.constructor.name;
+    if(!this.eventRegisteredSet.has(eventName))
+      throw new Error(`Event ${eventName} is not registered in event bus module`)
+
     await this.producer.send({
       topic: event.constructor.name,
       messages: [{value: event.toString()}],
@@ -47,6 +56,10 @@ export class KafkaEventBus implements IEventBus {
   }
 
   async subscribe(event: ClassType<IntegrationEvent>, handler: IEventHandler) {
+    const handlerName = handler.constructor.name;
+    if(!this.handlerRegisteredSet.has(handlerName)) 
+      throw new Error( `Handler ${handlerName} is not registered in event bus module`)
+
     this.manager.addSubscription(event, handler);
     const consumer = await this.getConsumer(event, handler);
     consumer.run({

@@ -12,17 +12,22 @@ export class RabbitMQEventBus implements IEventBus {
   private connection: Connection
   private subscribers: { event: ClassType<IntegrationEvent>, handler: IEventHandler, options?: SubscribeOptions }[] = []
   private manager = new EventBusSubscriptionsManager()
+  private readonly eventRegisteredSet: Set<string>
+  private readonly handlerRegisteredSet: Set<string>
 
   constructor(
     private config: RmqOptions,
   ) {
+    this.eventRegisteredSet = new Set((this.config.events ?? []).map(event => event.name));
+    this.handlerRegisteredSet = new Set((this.config.handlers ?? []).map(handler => handler.name));
     this.setup()
   }
 
   private async setup(){
-    const {options} = this.config
+    const {options, events} = this.config
     this.connection = await RabbitMQSingleton.getInstance(options)
     this.channel = await this.connection.createChannel()
+    this.register(events);
  
     while(this.subscribers.length > 0){
       const subscriberParams = this.subscribers.pop()
@@ -32,11 +37,14 @@ export class RabbitMQEventBus implements IEventBus {
     }
   }
 
+  private getQueueName(eventClass: ClassType<IntegrationEvent>, handler: IEventHandler){
+    return [eventClass.name, this.config.name, handler.constructor.name].join('.')
+  }
+
   private async addSubscription(eventClass: ClassType<IntegrationEvent>, handler: IEventHandler, _?: SubscribeOptions) {
-    const exchange = eventClass.name;
-    const queueName = [exchange, handler.constructor.name].join('.')
+    const queueName = this.getQueueName(eventClass, handler)
     await this.channel.assertQueue(queueName)
-    await this.channel.bindQueue(queueName, exchange, '')
+    await this.channel.bindQueue(queueName, eventClass.name, '')
 
     this.channel.consume(queueName, async (msg) => {
       if (!msg) return
@@ -68,13 +76,20 @@ export class RabbitMQEventBus implements IEventBus {
   }
 
   public async publish(event: IntegrationEvent) {
-    const exchange = event.constructor.name
+    const eventName = event.constructor.name;
+    if(!this.eventRegisteredSet.has(eventName))
+      throw new Error(`Event ${eventName} is not registered in event bus module`)
+
     const basicOptions: Options.Publish = {deliveryMode: 2, mandatory: true}
-    this.logger.log(`Publishing event ${exchange} to RabbitMQ with event id ${event.getAggregateId()}`);
-    this.channel.publish(exchange, '', Buffer.from(JSON.stringify(event)), basicOptions)
+    this.logger.log(`Publishing event ${eventName} to RabbitMQ with event id ${event.getAggregateId()}`);
+    this.channel.publish(eventName, '', Buffer.from(JSON.stringify(event)), basicOptions)
   }
 
   public async subscribe(event: ClassType<IntegrationEvent>, handler: IEventHandler, options?: SubscribeOptions) {
+    const handlerName = handler.constructor.name;
+    if(!this.handlerRegisteredSet.has(handlerName)) 
+      throw new Error( `Handler ${handlerName} is not registered in event bus module`)
+
     this.logger.log(`Subscribing to event ${event.name} with ${handler.constructor.name}`);
     this.manager.addSubscription(event, handler);
     if(!this.channel) {

@@ -2,6 +2,7 @@ import {ModuleMetadata} from "@nestjs/common";
 import {Options} from "amqplib";
 import {KafkaConfig} from 'kafkajs';
 import {IntegrationEvent} from "../abstracts";
+import {IEventHandler} from "./handler.interface";
 
 export enum EventBusEnum {
   Kafka = 'KAFKA',
@@ -10,16 +11,18 @@ export enum EventBusEnum {
 
 export declare type EventBusConfig = KafkaOptions | RmqOptions
 
-export interface KafkaOptions {
+export interface KafkaOptions extends EventBusOptions{
   options: KafkaConfig,
 }
 
-export interface RmqOptions {
+export interface RmqOptions extends EventBusOptions {
   options: string | Options.Connect
 }
 
-export interface EventBusRegisterEvents {
+export interface EventBusOptions {
+  name: string,
   events?: ClassType<IntegrationEvent>[];
+  handlers?: ClassType<IEventHandler>[]
 }
 
 export interface EventBusModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
