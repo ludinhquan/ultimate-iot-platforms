@@ -43,8 +43,11 @@ export class RabbitMQEventBus implements IEventBus {
 
   private async addSubscription(eventClass: ClassType<IntegrationEvent>, handler: IEventHandler, _?: SubscribeOptions) {
     const queueName = this.getQueueName(eventClass, handler)
+    const exchange = eventClass.name
+
+    await this.register([eventClass])
     await this.channel.assertQueue(queueName)
-    await this.channel.bindQueue(queueName, eventClass.name, '')
+    await this.channel.bindQueue(queueName, exchange, '')
 
     this.channel.consume(queueName, async (msg) => {
       if (!msg) return
@@ -63,14 +66,14 @@ export class RabbitMQEventBus implements IEventBus {
     })
   }
 
-  public async register(events: ClassType<IntegrationEvent>[]) {
+  public async register(events: ClassType<IntegrationEvent>[] = []) {
     const timeInterval = setInterval(async () => {
       if (!this.channel) return
       clearInterval(timeInterval)
       await Promise.all(events.map(async event => {
         const exchange = event.name;
         this.logger.log(`Creating RabbitMQ exchange ${exchange}`)
-        await this.channel.assertExchange(exchange, 'direct')
+        await this.channel.assertExchange(exchange, 'direct', {autoDelete: true})
       }, 100));
     });
   }
