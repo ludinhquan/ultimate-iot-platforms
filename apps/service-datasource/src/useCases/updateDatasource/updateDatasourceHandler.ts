@@ -7,7 +7,7 @@ import {UpdateDatasourceUseCase} from "./updateDatasource";
 import {UpdateDatasourceDTO} from "./updateDatasourceDTO";
 
 @EventBusHandler({event: RawDataReceivedEvent})
-export class RawDataReceivedEventHandler implements IEventHandler<RawDataReceivedEvent>{
+export class UpdateDataLogHandler implements IEventHandler<RawDataReceivedEvent>{
   logger = new Logger(this.constructor.name)
 
   constructor(

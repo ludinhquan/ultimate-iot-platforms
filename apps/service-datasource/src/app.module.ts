@@ -1,11 +1,11 @@
 import {ServiceRegistryModule} from "@iot-platforms/core";
-import {EventBusModule, RawDataReceivedEvent} from "@iot-platforms/event-bus";
+import {DataReceivedEvent, EventBusModule, RawDataReceivedEvent} from "@iot-platforms/event-bus";
 import {Module} from "@nestjs/common";
 import {DataAccessModule} from "./dataAccess";
 import {
   CreateConnectionController,
   GetConnectionController,
-  RawDataReceivedEventHandler,
+  UpdateDataLogHandler,
   PushDataController, 
 } from "./useCases";
 
@@ -19,7 +19,7 @@ const fakeDataController = [
 ]
 
 const handlers = [
-  RawDataReceivedEventHandler
+  UpdateDataLogHandler
 ]
 
 @Module({
@@ -28,8 +28,8 @@ const handlers = [
     DataAccessModule,
     EventBusModule.register({
       name: 'ServiceDatasource',
-      events: [RawDataReceivedEvent],
-      handlers: [RawDataReceivedEventHandler]
+      events: [RawDataReceivedEvent, DataReceivedEvent],
+      handlers: [UpdateDataLogHandler]
     })
   ],
   providers: [
