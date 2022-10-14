@@ -46,7 +46,7 @@ export class RabbitMQEventBus implements IEventBus {
     const exchange = eventClass.name
 
     await this.register([eventClass])
-    await this.channel.assertQueue(queueName)
+    await this.channel.assertQueue(queueName, {autoDelete: true})
     await this.channel.bindQueue(queueName, exchange, '')
 
     this.channel.consume(queueName, async (msg) => {

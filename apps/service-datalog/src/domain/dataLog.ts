@@ -11,6 +11,5 @@ export class DataLog extends Entity<DataLogProps> {
   }
 
   static create(props: DataLogProps, id?: UniqueEntityID) {
-
   }
 }

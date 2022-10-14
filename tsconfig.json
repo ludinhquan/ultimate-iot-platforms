@@ -59,6 +59,12 @@
       ],
       "@svc-datasource/*": [
         "apps/service-datasource/src/*"
+      ],
+      "@svc-datalog": [
+        "apps/service-datalog/src"
+      ],
+      "@svc-datalog/*": [
+        "apps/service-datalog/src/*"
       ]
     },
     "typeRoots": [
